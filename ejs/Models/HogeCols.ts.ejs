@@ -1,0 +1,11 @@
+import { <%- table.t_id %><%- table.t_name %>Interface } from './<%- table.t_name %>Interface';
+import { PropsWithType } from '@/Common/Hooks/CHK003TypeScript';
+
+/**
+ * Export Object of column names of <%- table.t_id %><%- table.t_name %> collection.
+ */
+export const <%- table.t_id %><%- table.t_name %>Cols: PropsWithType<<%- table.t_id %><%- table.t_name %>Interface, string> = {
+<% columns.forEach((column) => { -%>
+    <%- column.c_name%>: '<%- column.c_name%>',
+<% }); -%>
+}

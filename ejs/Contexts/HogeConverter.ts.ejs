@@ -1,0 +1,30 @@
+import { FirestoreDataConverter, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>';
+import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
+import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build } from './<%- func["機能名"] %>Build';
+
+export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter = (): FirestoreDataConverter<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface> => ({
+    toFirestore: (data: <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface): <%- table.t_id%><%- table.t_name %>Interface => {
+        return {
+<% columns.forEach((column) => { -%>
+<% if(column.c_datatype==="timestamp") { -%>
+            <%- column.c_name %>: Timestamp.fromDate(data.<%- column.c_name %>),
+<% } else { -%>
+            <%- column.c_name %>: data.<%- column.c_name %>,
+<% } -%>
+<% }); -%>
+        }
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot<<%- table.t_id%><%- table.t_name %>Interface>): <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface => {
+        const initData: <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface = <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build();
+        return {
+<% columns.forEach((column) => { -%>
+<% if(column.c_datatype==="timestamp") { -%>
+            <%- column.c_name %>: snapshot.data().<%- column.c_name %>.toDate() || initData.<%- column.c_name %>,
+<% } else { -%>
+            <%- column.c_name %>: snapshot.data().<%- column.c_name %> || initData.<%- column.c_name %>,
+<% } -%>
+<% }); -%>
+        }
+    }
+});

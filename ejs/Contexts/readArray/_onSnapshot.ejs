@@ -1,0 +1,8 @@
+                query<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface>(collectionRef),
+                (querySnapshot) => {
+                    if(querySnapshot.empty){
+                        create();
+                    } else {
+                        setQuerySnapshot(querySnapshot);
+                    }
+                }

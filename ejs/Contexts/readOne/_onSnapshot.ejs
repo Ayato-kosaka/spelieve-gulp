@@ -1,0 +1,8 @@
+                doc(collectionRef, id),
+                (documentSnapshot) => {
+                    if (!documentSnapshot.exists()) {
+                        create();
+                    } else {
+                        setDocumentSnapshot(documentSnapshot);
+                    }
+                }

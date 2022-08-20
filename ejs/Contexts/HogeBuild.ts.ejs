@@ -1,0 +1,7 @@
+import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
+
+export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build = (): <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface => ({
+<% columns.forEach((column) => { -%>
+    <%- column.c_name %>: <%- dataType.find(x => x.FirestoreType === column.c_datatype).CTInit %>,
+<% }); -%>
+})
