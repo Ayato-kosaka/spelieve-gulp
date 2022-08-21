@@ -24,7 +24,7 @@ import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build } from './<%- 
  */
 interface <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface {
     <%- mainVal %>: <%- mainValType %>;
-    create: () => Promise<void>;
+    create: () => Promise<DocumentReference>;
 }
 export const <%- func["機能ＩＤ"] %><%- func["機能名"] %> = createContext({} as <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface);
 
@@ -62,7 +62,7 @@ export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Provider = ({
     }, [parentDocRef<% if(option==="readOne"){ -%>, id<% } -%>]);
 
     const create: <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface['create'] = async () => {
-        addDoc<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface>(collectionRef, <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build());
+        return await addDoc<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface>(collectionRef, <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build());
     }
 
     if (!<%- mainVal %>) {
