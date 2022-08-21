@@ -24,7 +24,7 @@ import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build } from './<%- 
  */
 interface <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface {
     <%- mainVal %>: <%- mainValType %>;
-    create: () => void;
+    create: () => Promise<void>;
 }
 export const <%- func["機能ＩＤ"] %><%- func["機能名"] %> = createContext({} as <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface);
 
