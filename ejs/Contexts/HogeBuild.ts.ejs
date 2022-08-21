@@ -1,5 +1,9 @@
 import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
+import * as CHK001Utils from '@/Common/Hooks/CHK001Utils';
 
+/**
+ * Export build function of initial <%- func["機能ＩＤ"] %><%- func["機能名"] %>.
+ */
 export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build = (): <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface => ({
 <% columns.forEach((column) => { -%>
     <%- column.c_name %>: <%- dataType.find(x => x.FirestoreType === column.c_datatype).CTInit %>,

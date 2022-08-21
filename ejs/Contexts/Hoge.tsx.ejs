@@ -13,7 +13,7 @@
 import { ActivityIndicator } from 'react-native-paper';
 import { useState, createContext, useEffect, ReactNode } from 'react';
 import db from '@/<%- func["大分類"] %>/Endpoint/firestore'
-import { collection, doc, query, QuerySnapshot, onSnapshot, addDoc, DocumentReference, DocumentSnapshot } from 'firebase/firestore';
+import { collection, doc, query, QuerySnapshot, onSnapshot, addDoc, DocumentReference, DocumentSnapshot, QueryDocumentSnapshot } from 'firebase/firestore';
 import { <%- table.t_id %><%- table.t_name %>Cols, collectionName, <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>'
 import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
 import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter } from './<%- func["機能名"] %>Converter';
@@ -46,7 +46,7 @@ export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Provider = ({
 <% } -%>
 }: <%- func["機能ＩＤ"] %><%- func["機能名"] %>ProviderPropsInterface) => {
     
-    const [<%- mainVal %>, set<%- mainVal[0].toUpperCase() + mainVal.slice(1) %>] = useState<<%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface['<%- mainVal %>'] | null>(null);
+    const [<%- mainVal %>, set<%- mainVal[0].toUpperCase() + mainVal.slice(1) %>] = useState<<%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface['<%- mainVal %>']<% if(option!=="readMap"){ -%> | null<% } -%>>(<%- option!=="readMap" ? 'null' : '{}' %>);
     
     const collectionRef = parentDocRef
         ?   collection(parentDocRef, collectionName).withConverter(<%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter())
@@ -59,7 +59,7 @@ export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Provider = ({
             );
         }
         fetchData();
-    }, [parentDocRef]);
+    }, [parentDocRef<% if(option==="readOne"){ -%>, id<% } -%>]);
 
     const create: <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface['create'] = async () => {
         addDoc<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface>(collectionRef, <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build());

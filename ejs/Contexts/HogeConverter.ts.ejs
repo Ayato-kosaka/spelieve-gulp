@@ -3,7 +3,13 @@ import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大�
 import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
 import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build } from './<%- func["機能名"] %>Build';
 
+/**
+* Export a FirestoreDataConverter to transform <%- func["機能ＩＤ"] %><%- func["機能名"] %> into Firestore data.
+*/
 export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter = (): FirestoreDataConverter<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface> => ({
+    /**
+    * Convert <%- func["機能ＩＤ"] %><%- func["機能名"] %> before be saved to Firestore.
+    */
     toFirestore: (data: <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface): <%- table.t_id%><%- table.t_name %>Interface => {
         return {
 <% columns.forEach((column) => { -%>
@@ -15,6 +21,10 @@ export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter = (): 
 <% }); -%>
         }
     },
+    
+    /**
+    * Convert the data from Firestore to match <%- func["機能ＩＤ"] %><%- func["機能名"] %>.
+    */
     fromFirestore: (snapshot: QueryDocumentSnapshot<<%- table.t_id%><%- table.t_name %>Interface>): <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface => {
         const initData: <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface = <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build();
         return {

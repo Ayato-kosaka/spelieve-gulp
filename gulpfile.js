@@ -29,7 +29,8 @@ const getData = async () => {
 
 /**
  * Create Models directory files.
- * @param	param1	TableID (ex: IDB001)
+ * @param	task	"Models"
+ * @param	arg1	TableID (ex: IDB001)
  */
 gulp.task("Models", async done => {
 	const t_id = options.arg1
@@ -55,9 +56,10 @@ gulp.task("Models", async done => {
 
 /**
  * Create Contexts directory files.
- * @param	param1	FunctionID (ex: ICT001)
- * @param	param2	TableID (ex: IDB001)
- * @param	param3	option ("readOne" | "readArray" | "readMap")
+ * @param	task	"Contexts"
+ * @param	arg1	FunctionID (ex: ICT001)
+ * @param	arg2	TableID (ex: IDB001)
+ * @param	arg3	option ("readOne" | "readArray" | "readMap")
  */
 gulp.task("Contexts", async done => {
 	const func_id = options.arg1;

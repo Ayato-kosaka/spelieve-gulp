@@ -1,6 +1,9 @@
-import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>'
-import { Weaken } from '@/Common/Hooks/CHK003TypeScript'
+import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>';
+import { Weaken } from '@/Common/Hooks/CHK003TypeScript';
 
+/**
+ * Export interface of <%- func["機能ＩＤ"] %><%- func["機能名"] %> object.
+ */
 <%
     let extendsType = table.t_id + table.t_name + "Interface";
     if(columns.find(x => dataType.find(y => y.FirestoreType === x.c_datatype).CTType )){
