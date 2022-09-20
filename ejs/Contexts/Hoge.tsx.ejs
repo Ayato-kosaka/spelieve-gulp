@@ -2,55 +2,55 @@
     const [mainVal, mainValType] = ((option) => {
         switch(option){
             case 'readOne':
-                return(['documentSnapshot', 'DocumentSnapshot<' + func["機能ＩＤ"] + func["機能名"] + 'Interface>']);
+                return(['documentSnapshot', 'DocumentSnapshot<' + func.FuncID + func.FuncName + 'Interface>']);
             case 'readArray':
-                return(['querySnapshot', 'QuerySnapshot<' + func["機能ＩＤ"] + func["機能名"] + 'Interface>']);
+                return(['querySnapshot', 'QuerySnapshot<' + func.FuncID + func.FuncName + 'Interface>']);
             case 'readMap':
-                return(['documentSnapshots', '{[id:string]: QueryDocumentSnapshot<' + func["機能ＩＤ"] + func["機能名"] + 'Interface>}']);
+                return(['documentSnapshots', '{[id:string]: QueryDocumentSnapshot<' + func.FuncID + func.FuncName + 'Interface>}']);
         }
     })(option);
 -%>
 import { ActivityIndicator } from 'react-native-paper';
 import { useState, createContext, useEffect, ReactNode } from 'react';
-import db from '@/<%- func["大分類"] %>/Endpoint/firestore'
+import db from '@/<%- func.ServiceName %>/Endpoint/firestore'
 import { collection, doc, query, QuerySnapshot, onSnapshot, addDoc, DocumentReference, DocumentSnapshot, QueryDocumentSnapshot } from 'firebase/firestore';
-import { <%- table.t_id %><%- table.t_name %>Cols, collectionName, <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>'
-import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
-import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter } from './<%- func["機能名"] %>Converter';
-import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build } from './<%- func["機能名"] %>Build';
+import { <%- table.t_id %><%- table.t_name %>Cols, collectionName, <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func.ServiceName %>/Models/<%- table.t_id %><%- table.t_name %>'
+import { <%- func.FuncID %><%- func.FuncName %>Interface } from './<%- func.FuncName %>Interface';
+import { <%- func.FuncID %><%- func.FuncName %>Converter } from './<%- func.FuncName %>Converter';
+import { <%- func.FuncID %><%- func.FuncName %>Build } from './<%- func.FuncName %>Build';
 
 /**
- * Define value interface of useContext(<%- func["機能ＩＤ"] %><%- func["機能名"] %>). 
+ * Define value interface of useContext(<%- func.FuncID %><%- func.FuncName %>). 
  */
-interface <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface {
+interface <%- func.FuncID %><%- func.FuncName %>ValInterface {
     <%- mainVal %>: <%- mainValType %>;
     create: () => Promise<DocumentReference>;
 }
-export const <%- func["機能ＩＤ"] %><%- func["機能名"] %> = createContext({} as <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface);
+export const <%- func.FuncID %><%- func.FuncName %> = createContext({} as <%- func.FuncID %><%- func.FuncName %>ValInterface);
 
 /**
- * Export Provider of <%- func["機能ＩＤ"] %><%- func["機能名"] %>. 
+ * Export Provider of <%- func.FuncID %><%- func.FuncName %>. 
  */
-interface <%- func["機能ＩＤ"] %><%- func["機能名"] %>ProviderPropsInterface {
+interface <%- func.FuncID %><%- func.FuncName %>ProviderPropsInterface {
     parentDocRef?: DocumentReference;
     children: ReactNode;
 <% if(option === 'readOne'){ -%>
     id: string;
 <% } -%>
 }
-export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Provider = ({
+export const <%- func.FuncID %><%- func.FuncName %>Provider = ({
     parentDocRef,
     children,
 <% if(option === 'readOne'){ -%>
     id,
 <% } -%>
-}: <%- func["機能ＩＤ"] %><%- func["機能名"] %>ProviderPropsInterface) => {
+}: <%- func.FuncID %><%- func.FuncName %>ProviderPropsInterface) => {
     
-    const [<%- mainVal %>, set<%- mainVal[0].toUpperCase() + mainVal.slice(1) %>] = useState<<%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface['<%- mainVal %>']<% if(option!=="readMap"){ -%> | null<% } -%>>(<%- option!=="readMap" ? 'null' : '{}' %>);
+    const [<%- mainVal %>, set<%- mainVal[0].toUpperCase() + mainVal.slice(1) %>] = useState<<%- func.FuncID %><%- func.FuncName %>ValInterface['<%- mainVal %>']<% if(option!=="readMap"){ -%> | null<% } -%>>(<%- option!=="readMap" ? 'null' : '{}' %>);
     
     const collectionRef = parentDocRef
-        ?   collection(parentDocRef, collectionName).withConverter(<%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter())
-        :   collection(db, collectionName).withConverter(<%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter());
+        ?   collection(parentDocRef, collectionName).withConverter(<%- func.FuncID %><%- func.FuncName %>Converter())
+        :   collection(db, collectionName).withConverter(<%- func.FuncID %><%- func.FuncName %>Converter());
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,17 +61,17 @@ export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Provider = ({
         fetchData();
     }, [parentDocRef<% if(option==="readOne"){ -%>, id<% } -%>]);
 
-    const create: <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface['create'] = async () => {
-        return await addDoc<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface>(collectionRef, <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build());
+    const create: <%- func.FuncID %><%- func.FuncName %>ValInterface['create'] = async () => {
+        return await addDoc<<%- func.FuncID %><%- func.FuncName %>Interface>(collectionRef, <%- func.FuncID %><%- func.FuncName %>Build());
     }
 
     if (!<%- mainVal %>) {
         return <ActivityIndicator animating={true} />
     }
     
-    const value: <%- func["機能ＩＤ"] %><%- func["機能名"] %>ValInterface = {
+    const value: <%- func.FuncID %><%- func.FuncName %>ValInterface = {
         <%- mainVal %>,
         create,
     }
-    return <<%- func["機能ＩＤ"] %><%- func["機能名"] %>.Provider value={value}>{children}</<%- func["機能ＩＤ"] %><%- func["機能名"] %>.Provider>
+    return <<%- func.FuncID %><%- func.FuncName %>.Provider value={value}>{children}</<%- func.FuncID %><%- func.FuncName %>.Provider>
 };

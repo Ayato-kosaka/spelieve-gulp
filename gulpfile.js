@@ -66,7 +66,7 @@ gulp.task("Contexts", async done => {
 	const t_id = options.arg2;
 	const option = options.arg3;
 	const json = await getData();
-	const func = json["機能一覧"].find(j => j["機能ＩＤ"] === func_id);
+	const func = json.FuncList.find(j => j.FuncID === func_id);
   const table = json.TABLES.find(j => j.t_id === t_id);
   const columns = json.T_COLUMNS.filter(j => j.t_id === t_id);
   const dataType = json.DATA_TYPE;
@@ -80,7 +80,7 @@ gulp.task("Contexts", async done => {
 			dataType: dataType,
 		}))
 		.pipe(rename((path) => ({ 
-		    dirname: "./"+func_id+func["機能名"],
+		    dirname: "./"+func_id+func.FuncName,
 		    basename: path.basename.replace('Hoge', table.t_name),
 		    extname: ""
         })))

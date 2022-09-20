@@ -1,16 +1,16 @@
 import { FirestoreDataConverter, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
-import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>';
-import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface } from './<%- func["機能名"] %>Interface';
-import { <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build } from './<%- func["機能名"] %>Build';
+import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func.ServiceName %>/Models/<%- table.t_id %><%- table.t_name %>';
+import { <%- func.FuncID %><%- func.FuncName %>Interface } from './<%- func.FuncName %>Interface';
+import { <%- func.FuncID %><%- func.FuncName %>Build } from './<%- func.FuncName %>Build';
 
 /**
-* Export a FirestoreDataConverter to transform <%- func["機能ＩＤ"] %><%- func["機能名"] %> into Firestore data.
+* Export a FirestoreDataConverter to transform <%- func.FuncID %><%- func.FuncName %> into Firestore data.
 */
-export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter = (): FirestoreDataConverter<<%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface> => ({
+export const <%- func.FuncID %><%- func.FuncName %>Converter = (): FirestoreDataConverter<<%- func.FuncID %><%- func.FuncName %>Interface> => ({
     /**
-    * Convert <%- func["機能ＩＤ"] %><%- func["機能名"] %> before be saved to Firestore.
+    * Convert <%- func.FuncID %><%- func.FuncName %> before be saved to Firestore.
     */
-    toFirestore: (data: <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface): <%- table.t_id%><%- table.t_name %>Interface => {
+    toFirestore: (data: <%- func.FuncID %><%- func.FuncName %>Interface): <%- table.t_id%><%- table.t_name %>Interface => {
         return {
 <% columns.forEach((column) => { -%>
 <% if(column.c_datatype==="timestamp") { -%>
@@ -23,10 +23,10 @@ export const <%- func["機能ＩＤ"] %><%- func["機能名"] %>Converter = (): 
     },
     
     /**
-    * Convert the data from Firestore to match <%- func["機能ＩＤ"] %><%- func["機能名"] %>.
+    * Convert the data from Firestore to match <%- func.FuncID %><%- func.FuncName %>.
     */
-    fromFirestore: (snapshot: QueryDocumentSnapshot<<%- table.t_id%><%- table.t_name %>Interface>): <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface => {
-        const initData: <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface = <%- func["機能ＩＤ"] %><%- func["機能名"] %>Build();
+    fromFirestore: (snapshot: QueryDocumentSnapshot<<%- table.t_id%><%- table.t_name %>Interface>): <%- func.FuncID %><%- func.FuncName %>Interface => {
+        const initData: <%- func.FuncID %><%- func.FuncName %>Interface = <%- func.FuncID %><%- func.FuncName %>Build();
         return {
 <% columns.forEach((column) => { -%>
 <% if(column.c_datatype==="timestamp") { -%>

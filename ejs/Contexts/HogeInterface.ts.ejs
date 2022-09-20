@@ -1,8 +1,8 @@
-import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func["大分類"] %>/Models/<%- table.t_id %><%- table.t_name %>';
+import { <%- table.t_id %><%- table.t_name %>Interface } from '@/<%- func.ServiceName %>/Models/<%- table.t_id %><%- table.t_name %>';
 import { Weaken } from '@/Common/Hooks/CHK003TypeScript';
 
 /**
- * Export interface of <%- func["機能ＩＤ"] %><%- func["機能名"] %> object.
+ * Export interface of <%- func.FuncID %><%- func.FuncName %> object.
  */
 <%
     let extendsType = table.t_id + table.t_name + "Interface";
@@ -10,7 +10,7 @@ import { Weaken } from '@/Common/Hooks/CHK003TypeScript';
         extendsType = "Weaken<" + extendsType + ", " + columns.filter(x => dataType.find(y => y.FirestoreType === x.c_datatype).CTType).map(x => "'" + x.c_name + "'").join(' | ') + ">";
     }
 -%>
-export interface <%- func["機能ＩＤ"] %><%- func["機能名"] %>Interface extends <%- extendsType %> {
+export interface <%- func.FuncID %><%- func.FuncName %>Interface extends <%- extendsType %> {
 <% columns.forEach((column) => { -%>
 <% if(dataType.find(y => y.FirestoreType === column.c_datatype).CTType) { -%>
     <%- column.c_name %>: <%- dataType.find(y => y.FirestoreType === column.c_datatype).CTType %>;
