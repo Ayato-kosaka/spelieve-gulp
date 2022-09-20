@@ -10,10 +10,11 @@ const srcBase = '.';
 const distBase = './dist';
 
 const options = minimist(process.argv.slice(2), {
-  string: 'arg1',
+  string: ['arg1', 'arg2', 'arg3'],
   default: {
     arg1: '',
-    arg2: ''
+    arg2: '',
+    arg3: '',
   }
 });
 
@@ -87,3 +88,36 @@ gulp.task("Contexts", async done => {
 		.pipe(gulp.dest(distBase));
 	done();
 })
+
+/**
+ * Create Interface files.
+ * @param	task	"Interfaces"
+ * @param	arg1	func_id? (ex: IDB001)
+ * @param	arg2	i_prefix? (ex: Props)
+ */
+gulp.task("Interfaces", async done => {
+	const func_id = options.arg1;
+	const i_prefix = options.arg2;
+	const json = await getData();
+	const interfaces = json.INTERFACE;
+	new Set(interfaces.map(x => x.func_id)).forEach(fid => {
+		if(func_id && func_id !== fid){ return; }
+		const fidFilteredList = interfaces.filter(i => i.func_id === fid);
+		new Set(fidFilteredList.map(x => x.i_prefix)).forEach(ipr => {
+			if(i_prefix && i_prefix !== ipr){ return; }
+			const list = fidFilteredList.filter(i => i.i_prefix === ipr);
+			gulp
+				.src(["./ejs/Interfaces/*.ejs"])
+				.pipe(ejs({
+					interfaces: list
+				}))
+				.pipe(rename((path) => ({ 
+				    dirname: "./Interfaces/"+list[0].func_id + list[0].func_name,
+				    basename: path.basename.replace('Hoge', list[0].func_name+list[0].i_prefix),
+				    extname: ""
+		        })))
+				.pipe(gulp.dest(distBase));
+		})
+	})
+	done();
+});
