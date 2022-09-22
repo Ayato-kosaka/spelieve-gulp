@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css" />
+	<link rel="stylesheet" href="./外部CSSがあれば書く.css" />
+	<style>
+		/* ここにCSSを書く */
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+	<meta name="landscape" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>サンプル</title>
+</head>
+<body>
+	<form>
+		<label for="task">task</label>
+		<input type="text" name="task"/>
+		<label for="arg1">arg1</label>
+		<input type="text" name="arg1"/>
+		<input type="submit" value="Submit"/>
+	</form>
+
+	<script src="./外部JSがあれば書く.js"></script>
+	<script>
+		const { exec } = require('child_process')
+		
+		exec(`npm run gulp --task=${task} --arg1=${arg1} --arg2=${arg2} --arg3${arg3}`, (err, stdout, stderr) => {
+		    if (err) {
+		      console.log(`stderr: ${stderr}`)
+		      return
+		    }
+		    console.log(`stdout: ${stdout}`)
+		  }
+		)
+	</script>
+</body>
+</html>
