@@ -68,9 +68,9 @@ gulp.task("Contexts", async done => {
 	const option = options.arg3;
 	const json = await getData();
 	const func = json.FuncList.find(j => j.FuncID === func_id);
-  const table = json.TABLES.find(j => j.t_id === t_id);
-  const columns = json.T_COLUMNS.filter(j => j.t_id === t_id);
-  const dataType = json.DATA_TYPE;
+	const table = json.TABLES.find(j => j.t_id === t_id);
+	const columns = json.T_COLUMNS.filter(j => j.t_id === t_id);
+	const dataType = json.DATA_TYPE;
 	gulp
 		.src(["./ejs/Contexts/*.ejs"])
 		.pipe(ejs({
@@ -134,7 +134,7 @@ gulp.task("Interfaces", async done => {
 		gulp
 			.src(["./ejs/Models/*.ejs"])
 			.pipe(ejs({
-				columns: columns,
+				columns: list,
 				dataType: dataType,
 				name: func.FuncName,
 			}))
