@@ -12,11 +12,11 @@ import { React , ReactNode } from 'react';
  * Export interface of dataInterface object.
  */
 export interface dataInterfaceInterface {
-    TABLES: TABLESInterface;
-    T_COLUMNS: T_COLUMNSInterface;
-    VIEW: VIEWInterface;
-    INTERFACE: INTERFACEInterface;
-    SECURITY_RULES: SECURITY_RULESInterface;
-    DATA_TYPE: DATA_TYPEInterface;
-    FuncList: FuncListInterface;
+    TABLES: TABLESInterface[];
+    T_COLUMNS: T_COLUMNSInterface[];
+    VIEW: VIEWInterface[];
+    INTERFACE: INTERFACEInterface[];
+    SECURITY_RULES: SECURITY_RULESInterface[];
+    DATA_TYPE: DATA_TYPEInterface[];
+    FuncList: FuncListInterface[];
 } 

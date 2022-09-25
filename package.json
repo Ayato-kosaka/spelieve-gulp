@@ -2,23 +2,24 @@
   "name": "spelieve-gulp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
     "gulp": "gulp $npm_config_task --arg1 $npm_config_arg1 --arg2 $npm_config_arg2 --arg3 $npm_config_arg3"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/gulp": "^4.0.9",
+    "del": "^7.0.0",
     "gulp": "^4.0.2",
     "gulp-ejs": "^5.1.0",
     "gulp-rename": "^2.0.0",
     "minimist": "^1.2.6",
-    "ts-node": "^10.9.1"
+    "ts-node": "^8.0.3",
+    "typescript": "^4.8.3"
   },
   "dependencies": {
-    "del": "^7.0.0",
     "dotenv": "^16.0.1",
     "node-fetch": "^3.2.10"
   }
