@@ -1,11 +1,11 @@
 import gulp from "gulp";
+import fetch from 'node-fetch';
 import rename from "gulp-rename";
 import ejs from "gulp-ejs";
 import minimist from "minimist";
 import dotenv from 'dotenv';
 import { deleteAsync } from 'del';
 dotenv.config();
-import { getData } from './dev/getData'
 
 const srcBase = '.';
 const distBase = './dist';
@@ -20,6 +20,15 @@ const options = minimist(process.argv.slice(2), {
 });
 
 
+const getData = async () => {
+	try {
+	  const response = await fetch(process.env.PG_DATA_ENDPOINT/* as RequestInfo */);
+	  return await response.json();
+	} catch (error) {
+	  console.log(error);
+	}
+  };
+  
 
 
 /**
@@ -49,11 +58,7 @@ let taskNm = "dev/dataInterface"
 			})))
 			.pipe(gulp.dest("./"));
 	})
-	console.log(Object.keys(json).map(key => ({
-		i_name: key,
-		i_required: true,
-		i_type: `Array<${key}Interface>`,
-	})))
+	
 	gulp
 		.src(["./ejs/Interface/index.ts.ejs"])
 		.pipe(ejs({

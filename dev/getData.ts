@@ -1,4 +1,6 @@
 import fetch, { RequestInfo } from 'node-fetch';
+import dotenv from 'dotenv';
+dotenv.config();
 
 import { dataInterface } from './dataInterface';
 
