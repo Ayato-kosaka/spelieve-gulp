@@ -1,10 +1,16 @@
-import { GeoPoint, Timestamp, DocumentReference } from "firebase/firestore/dist/firestore";
+import { GeoPoint, Timestamp, DocumentReference } from "firebase/firestore";
 
 /**
  * Export interface of <%- name %> collection.
  */
 export interface <%- name %>Interface {
 <% columns.forEach((column) => { -%>
-    <%- column.c_name %>: <%- dataType.find(x => x.FirestoreType === column.c_datatype).DBType %>;
+    <%- column.c_name %>: <%- function(type) {
+        if(["array", "map"].includes(type)){
+            return column.memo;
+        } else {
+            return dataType.find(x => x.FirestoreType === type).DBType;
+        }
+    }(column.c_datatype) %>;
 <% }); -%>
 };
