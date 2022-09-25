@@ -100,20 +100,22 @@ gulp.task("Interfaces", async done => {
 	const i_prefix = options.arg2;
 	const json = await getData();
 	const interfaces = json.INTERFACE;
+	const funcList = json.FuncList;
 	new Set(interfaces.map(x => x.func_id)).forEach(fid => {
 		if(func_id && func_id !== fid){ return; }
 		const fidFilteredList = interfaces.filter(i => i.func_id === fid);
 		new Set(fidFilteredList.map(x => x.i_prefix)).forEach(ipr => {
 			if(i_prefix && i_prefix !== ipr){ return; }
 			const list = fidFilteredList.filter(i => i.i_prefix === ipr);
+			const func = funcList.find(x => x.FuncID === fid);
 			gulp
 				.src(["./ejs/Interfaces/*.ejs"])
 				.pipe(ejs({
 					interfaces: list
 				}))
 				.pipe(rename((path) => ({ 
-				    dirname: "./Interfaces/"+list[0].func_id + list[0].func_name,
-				    basename: path.basename.replace('Hoge', list[0].func_name+list[0].i_prefix),
+				    dirname: `./Interfaces/${func.ServiceName}/${func.FuncID}`,
+				    basename: path.basename.replace('Hoge', `${func.FuncName}${ipr}`),
 				    extname: ""
 		        })))
 				.pipe(gulp.dest(distBase));
