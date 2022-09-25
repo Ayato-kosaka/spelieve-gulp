@@ -4,6 +4,7 @@ import rename from "gulp-rename";
 import ejs from "gulp-ejs";
 import minimist from "minimist";
 import dotenv from 'dotenv';
+import { deleteAsync } from 'del';
 dotenv.config();
 
 const srcBase = '.';
@@ -36,11 +37,12 @@ const getData = async () => {
  */
 let taskNm = "dev/dataInterface"
  gulp.task(taskNm, async done => {
+	await deleteAsync(`./${taskNm}`)
 	const json = await getData();
 	Object.keys(json).forEach(dataNm => {
 		const nowData = json[dataNm];
 		gulp
-			.src(["./ejs/Interface/*.ejs"])
+			.src(["./ejs/Interface/HogeInterface.ts.ejs"])
 			.pipe(ejs({
 				name: `${dataNm}`,
 				interfaces: Object.keys(nowData[0]).map(key => ({
@@ -58,16 +60,16 @@ let taskNm = "dev/dataInterface"
 	})
 	
 	gulp
-		.src(["./ejs/Interface/*.ejs"])
+		.src(["./ejs/Interface/index.ts.ejs"])
 		.pipe(ejs({
 			name: `dataInterface`,
 			interfaces: Object.keys(json).map(key => ({
 				i_name: key,
 				i_required: true,
-				i_type: `{key}Interface`,
+				i_type: `${key}Interface`,
 			})),
 			imports: Object.keys(json).map(key => ({
-				as: `{key}Interface`,
+				as: `${key}Interface`,
 				path: `./${key}Interface`
 			}))
 		}))
@@ -163,7 +165,7 @@ gulp.task("Interfaces", async done => {
 			const list = fidFilteredList.filter(i => i.i_prefix === ipr);
 			const func = funcList.find(x => x.FuncID === fid);
 			gulp
-				.src(["./ejs/Interface/*.ejs"])
+				.src(["./ejs/Interface/HogeInterface.ts.ejs"])
 				.pipe(ejs({
 					name: `${func.FuncName}${ipr}`,
 					interfaces: list
