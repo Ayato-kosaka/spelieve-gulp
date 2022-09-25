@@ -99,8 +99,9 @@ gulp.task("Interfaces", async done => {
 	const func_id = options.arg1;
 	const i_prefix = options.arg2;
 	const json = await getData();
-	const interfaces = json.INTERFACE;
 	const funcList = json.FuncList;
+
+	const interfaces = json.INTERFACE;
 	new Set(interfaces.map(x => x.func_id)).forEach(fid => {
 		if(func_id && func_id !== fid){ return; }
 		const fidFilteredList = interfaces.filter(i => i.func_id === fid);
@@ -111,15 +112,38 @@ gulp.task("Interfaces", async done => {
 			gulp
 				.src(["./ejs/Interfaces/*.ejs"])
 				.pipe(ejs({
+					name: `${func.FuncName}${ipr}`,
 					interfaces: list
 				}))
 				.pipe(rename((path) => ({ 
-				    dirname: `./Interfaces/${func.ServiceName}/${func.FuncID}`,
+				    dirname: `./${func.ServiceName}/${func.FuncID}`,
 				    basename: path.basename.replace('Hoge', `${func.FuncName}${ipr}`),
 				    extname: ""
 		        })))
-				.pipe(gulp.dest(distBase));
+				.pipe(gulp.dest(distBase+"/Interfaces"));
 		})
+	})
+
+	
+    const columns = json.T_COLUMNS;
+    const dataType = json.DATA_TYPE;
+	new Set(columns.map(x => x.t_id)).forEach(fid => {
+		if(func_id && func_id !== fid){ return; }
+		const list = columns.filter(c => c.t_id === fid);
+		const func = funcList.find(x => x.FuncID === fid);
+		gulp
+			.src(["./ejs/Models/*.ejs"])
+			.pipe(ejs({
+				columns: columns,
+				dataType: dataType,
+				name: func.FuncName,
+			}))
+			.pipe(rename((path) => ({ 
+				dirname: `./${func.ServiceName}/${fid}`,
+				basename: path.basename.replace('Hoge', func.FuncName),
+				extname: ""
+			})))
+			.pipe(gulp.dest(distBase+"/Interfaces"));
 	})
 	done();
 });

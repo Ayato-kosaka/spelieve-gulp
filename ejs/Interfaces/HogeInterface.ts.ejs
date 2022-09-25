@@ -1,7 +1,7 @@
 /**
- * Export interface of <%- interfaces[0].func_id %><%- interfaces[0].func_name %> object.
+ * Export interface of <%- name %> object.
  */
-export interface <%- interfaces[0].func_id %><%- interfaces[0].func_name %><%- interfaces[0].i_prefix %>Interface {
+export interface <%- name %>Interface {
 <% interfaces.forEach((interface) => { -%>
     <%- interface.i_name %><%- interface.i_required ? '' : '?'  %>: <%- interface.i_type %>;
 <% }); -%>

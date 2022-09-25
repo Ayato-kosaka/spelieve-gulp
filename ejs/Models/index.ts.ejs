@@ -1,7 +1,7 @@
 /**
 * The Firestore Collection name
 */
-export const collectionName: string = '<%- table.t_name %>';
+export const collectionName: string = '<%- name %>';
 
-export * from './<%- table.t_name %>Interface';
-export { <%- table.t_id %><%- table.t_name %>Cols } from './<%- table.t_name %>Cols';
+export * from './<%- name %>Interface';
+export { <%- name %>Cols } from './<%- name %>Cols';

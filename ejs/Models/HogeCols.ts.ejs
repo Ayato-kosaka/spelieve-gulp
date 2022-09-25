@@ -1,10 +1,9 @@
-import { <%- table.t_id %><%- table.t_name %>Interface } from './<%- table.t_name %>Interface';
-import { PropsWithType } from '@/Common/Hooks/CHK003TypeScript';
+import { <%- name %>Interface } from './<%- name %>Interface';
 
 /**
- * Export Object of column names of <%- table.t_id %><%- table.t_name %> collection.
+ * Export Object of column names of <%- name %> collection.
  */
-export const <%- table.t_id %><%- table.t_name %>Cols: PropsWithType<<%- table.t_id %><%- table.t_name %>Interface, string> = {
+export const <%- name %>Cols: { [P in keyof <%- name %>Interface]: string } = {
 <% columns.forEach((column) => { -%>
     <%- column.c_name%>: '<%- column.c_name%>',
 <% }); -%>
