@@ -18,15 +18,68 @@ const options = minimist(process.argv.slice(2), {
   }
 });
 
+// import * as x from './dev/dataInterface';
 
 const getData = async () => {
   try {
-    const response = await fetch(process.env.PG_DATA_ENDPOINT);
+    const response = await fetch(process.env.PG_DATA_ENDPOINT/* as RequestInfo */);
     return await response.json();
   } catch (error) {
     console.log(error);
   }
 };
+
+
+/**
+ * Create gulp/dataInterface directory files.
+ * @param	task	"gulp/dataInterface"
+ */
+let taskNm = "dev/dataInterface"
+ gulp.task(taskNm, async done => {
+	const json = await getData();
+	Object.keys(json).forEach(dataNm => {
+		const nowData = json[dataNm];
+		gulp
+			.src(["./ejs/Interface/*.ejs"])
+			.pipe(ejs({
+				name: `${dataNm}`,
+				interfaces: Object.keys(nowData[0]).map(key => ({
+					i_name: key,
+					i_required: true,
+					i_type: "string",
+				}))
+			}))
+			.pipe(rename((path) => ({ 
+				dirname: `./${taskNm}`,
+				basename: path.basename.replace('Hoge', `${dataNm}`),
+				extname: ""
+			})))
+			.pipe(gulp.dest("./"));
+	})
+	
+	gulp
+		.src(["./ejs/Interface/*.ejs"])
+		.pipe(ejs({
+			name: `dataInterface`,
+			interfaces: Object.keys(json).map(key => ({
+				i_name: key,
+				i_required: true,
+				i_type: `{key}Interface`,
+			})),
+			imports: Object.keys(json).map(key => ({
+				as: `{key}Interface`,
+				path: `./${key}Interface`
+			}))
+		}))
+		.pipe(rename((path) => ({ 
+			dirname: `./${taskNm}`,
+			basename: "index.ts",
+			extname: ""
+		})))
+		.pipe(gulp.dest("./"));
+	done();
+});
+
 
 /**
  * Create Models directory files.
@@ -110,7 +163,7 @@ gulp.task("Interfaces", async done => {
 			const list = fidFilteredList.filter(i => i.i_prefix === ipr);
 			const func = funcList.find(x => x.FuncID === fid);
 			gulp
-				.src(["./ejs/Interfaces/*.ejs"])
+				.src(["./ejs/Interface/*.ejs"])
 				.pipe(ejs({
 					name: `${func.FuncName}${ipr}`,
 					interfaces: list
