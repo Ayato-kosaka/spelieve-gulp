@@ -248,7 +248,7 @@ gulp.task("Interfaces", async done => {
 				gulp
 					.src(["./ejs/Interface/HogeInterface.ts.ejs"])
 					.pipe(ejs({
-						name: `${func.FuncName}${ipr}`,
+						name: `${fid}${func.FuncName}${ipr}`,
 						interfaces: iprFilteredInterfaces
 					}))
 					.pipe(rename((path) => ({ 
