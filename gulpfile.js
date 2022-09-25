@@ -125,25 +125,25 @@ gulp.task("Interfaces", async done => {
 	})
 
 	
-    const columns = json.T_COLUMNS;
-    const dataType = json.DATA_TYPE;
-	new Set(columns.map(x => x.t_id)).forEach(fid => {
-		if(func_id && func_id !== fid){ return; }
-		const list = columns.filter(c => c.t_id === fid);
-		const func = funcList.find(x => x.FuncID === fid);
-		gulp
-			.src(["./ejs/Models/*.ejs"])
-			.pipe(ejs({
-				columns: list,
-				dataType: dataType,
-				name: func.FuncName,
-			}))
-			.pipe(rename((path) => ({ 
-				dirname: `./${func.ServiceName}/${fid}`,
-				basename: path.basename.replace('Hoge', func.FuncName),
-				extname: ""
-			})))
-			.pipe(gulp.dest(distBase+"/Interfaces"));
-	})
+    // const columns = json.T_COLUMNS;
+    // const dataType = json.DATA_TYPE;
+	// new Set(columns.map(x => x.t_id)).forEach(fid => {
+	// 	if(func_id && func_id !== fid){ return; }
+	// 	const list = columns.filter(c => c.t_id === fid);
+	// 	const func = funcList.find(x => x.FuncID === fid);
+	// 	gulp
+	// 		.src(["./ejs/Models/*.ejs"])
+	// 		.pipe(ejs({
+	// 			columns: list,
+	// 			dataType: dataType,
+	// 			name: func.FuncName,
+	// 		}))
+	// 		.pipe(rename((path) => ({ 
+	// 			dirname: `./${func.ServiceName}/${fid}`,
+	// 			basename: path.basename.replace('Hoge', func.FuncName),
+	// 			extname: ""
+	// 		})))
+	// 		.pipe(gulp.dest(distBase+"/Interfaces"));
+	// })
 	done();
 });
