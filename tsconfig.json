@@ -2,7 +2,8 @@
     // these options are overrides used only by ts-node 
     "ts-node": {
         "compilerOptions": {
-            "module": "commonjs" ,
+            "module": "commonjs",
+            "esModuleInterop": true,
             "allowSyntheticDefaultImports": true
         }
     }

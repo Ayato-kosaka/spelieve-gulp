@@ -11,7 +11,7 @@ import { React , ReactNode } from 'react';
 /**
  * Export interface of dataInterface object.
  */
-export interface dataInterfaceInterface {
+export interface dataInterface {
     TABLES: TABLESInterface[];
     T_COLUMNS: T_COLUMNSInterface[];
     VIEW: VIEWInterface[];

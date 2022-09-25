@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import gulp from "gulp";
 import rename from "gulp-rename";
 import ejs from "gulp-ejs";
@@ -6,6 +5,7 @@ import minimist from "minimist";
 import dotenv from 'dotenv';
 import { deleteAsync } from 'del';
 dotenv.config();
+import { getData } from './dev/getData'
 
 const srcBase = '.';
 const distBase = './dist';
@@ -19,16 +19,7 @@ const options = minimist(process.argv.slice(2), {
   }
 });
 
-// import * as x from './dev/dataInterface';
 
-const getData = async () => {
-  try {
-    const response = await fetch(process.env.PG_DATA_ENDPOINT/* as RequestInfo */);
-    return await response.json();
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 
 /**
@@ -58,15 +49,19 @@ let taskNm = "dev/dataInterface"
 			})))
 			.pipe(gulp.dest("./"));
 	})
-	
+	console.log(Object.keys(json).map(key => ({
+		i_name: key,
+		i_required: true,
+		i_type: `Array<${key}Interface>`,
+	})))
 	gulp
 		.src(["./ejs/Interface/index.ts.ejs"])
 		.pipe(ejs({
-			name: `dataInterface`,
+			name: `data`,
 			interfaces: Object.keys(json).map(key => ({
 				i_name: key,
 				i_required: true,
-				i_type: `${key}Interface`,
+				i_type: `Array<${key}Interface>`,
 			})),
 			imports: Object.keys(json).map(key => ({
 				as: `${key}Interface`,
@@ -92,6 +87,10 @@ gulp.task("Models", async done => {
 	const t_id = options.arg1
 	const json = await getData();
     const table = json.TABLES.find(j => j.t_id === t_id);
+	if(!table) {
+		console.log("data not found");
+		return;
+	}
     const columns = json.T_COLUMNS.filter(j => j.t_id === t_id);
     const dataType = json.DATA_TYPE;
 	gulp
@@ -126,6 +125,10 @@ gulp.task("Contexts", async done => {
 	const table = json.TABLES.find(j => j.t_id === t_id);
 	const columns = json.T_COLUMNS.filter(j => j.t_id === t_id);
 	const dataType = json.DATA_TYPE;
+	if(!func || !table) {
+		console.log("data not found");
+		return;
+	}
 	gulp
 		.src(["./ejs/Contexts/*.ejs"])
 		.pipe(ejs({
@@ -164,6 +167,10 @@ gulp.task("Interfaces", async done => {
 			if(i_prefix && i_prefix !== ipr){ return; }
 			const list = fidFilteredList.filter(i => i.i_prefix === ipr);
 			const func = funcList.find(x => x.FuncID === fid);
+			if(!func) {
+				console.log("data not found");
+				return;
+			}
 			gulp
 				.src(["./ejs/Interface/HogeInterface.ts.ejs"])
 				.pipe(ejs({
