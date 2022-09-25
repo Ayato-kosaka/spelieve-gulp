@@ -198,27 +198,66 @@ gulp.task("Interfaces", async done => {
 	const json = await getData();
 	const funcList = json.FuncList;
 	const interfaces = json.INTERFACE;
-	new Set(interfaces.map(x => x.func_id)).forEach(fid => {
-		let filteredInterfaces = interfaces.filter(i => i.func_id === fid);
-		new Set(filteredInterfaces.map(x => x.i_prefix)).forEach(ipr => {
-			filteredInterfaces = filteredInterfaces.filter(i => i.i_prefix === ipr);
+
+	const serviseSet = new Set(interfaces.map(x => x.func_id[0]));
+	const sBase = distBase + "/Interface/";
+	gulp
+		.src(["./ejs/Index/index.ts.ejs"])
+		.pipe(ejs({
+			paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
+		}))
+		.pipe(rename((path) => ({ 
+			...path,
+			extname: ""
+		})))
+		.pipe(gulp.dest(sBase));
+	done();
+	serviseSet.forEach(sid => {
+		const sidFilteredInterfaces = interfaces.filter(x => x.func_id[0] === sid);
+		const serviceNm = funcList.find(x => x.ServiceID === sid).ServiceName
+		let dBase = sBase + serviceNm;
+		const funcSet = new Set(sidFilteredInterfaces.map(x => x.func_id));
+		gulp
+			.src(["./ejs/Index/index.ts.ejs"])
+			.pipe(ejs({
+				paths: Array.from(funcSet).map(x => `./${x}`)
+			}))
+			.pipe(rename((path) => ({ 
+				...path,
+				extname: ""
+			})))
+			.pipe(gulp.dest(dBase));
+		done();
+		funcSet.forEach(fid => {
+			const fidFilteredInterfaces = sidFilteredInterfaces.filter(x => x.func_id === fid);
 			const func = funcList.find(x => x.FuncID === fid);
-			if(!func) {
-				console.log("data not found");
-				return;
-			}
+			let fdBase = dBase + "/" + fid;
+			const iprSet = new Set(fidFilteredInterfaces.map(x => x.i_prefix));
 			gulp
-				.src(["./ejs/Interface/HogeInterface.ts.ejs"])
+				.src(["./ejs/Index/index.ts.ejs"])
 				.pipe(ejs({
-					name: `${func.FuncName}${ipr}`,
-					interfaces: filteredInterfaces
+					paths: Array.from(iprSet).map(x => `./${func.FuncName}${x}Interface`)
 				}))
 				.pipe(rename((path) => ({ 
-				    dirname: `./${func.ServiceName}/${func.FuncID}`,
-				    basename: path.basename.replace('Hoge', `${func.FuncName}${ipr}`),
-				    extname: ""
-		        })))
-				.pipe(gulp.dest(distBase+"/Interfaces"));
+					...path,
+					extname: ""
+				})))
+				.pipe(gulp.dest(fdBase));
+			iprSet.forEach(ipr => {
+				const iprFilteredInterfaces = fidFilteredInterfaces.filter(i => i.i_prefix === ipr);
+				gulp
+					.src(["./ejs/Interface/HogeInterface.ts.ejs"])
+					.pipe(ejs({
+						name: `${func.FuncName}${ipr}`,
+						interfaces: iprFilteredInterfaces
+					}))
+					.pipe(rename((path) => ({ 
+						...path,
+						basename: path.basename.replace('Hoge', `${func.FuncName}${ipr}`),
+						extname: ""
+					})))
+					.pipe(gulp.dest(fdBase));
+			})
 		})
 	})
 	done();
