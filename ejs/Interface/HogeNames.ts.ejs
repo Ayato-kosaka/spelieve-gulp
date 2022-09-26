@@ -1,0 +1,10 @@
+import { <%- name %>Interface } from './index';
+
+/**
+ * Export Object of interface names of <%- name %>.
+ */
+export const <%- name %>Cols: { [P in keyof <%- name %>Interface]: string } = {
+<% interfaces.forEach(interface => { -%>
+    <%- interface.i_name%>: '<%- interface.i_name%>',
+<% }); -%>
+}

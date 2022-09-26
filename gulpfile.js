@@ -47,7 +47,7 @@ let taskNm = "dev/dataInterface"
 	Object.keys(json).forEach(dataNm => {
 		const nowData = json[dataNm];
 		gulp
-			.src(["./ejs/Interface/HogeInterface.ts.ejs"])
+			.src(["./ejs/Interface/*.ejs"])
 			.pipe(ejs({
 				name: `${dataNm}`,
 				interfaces: Object.keys(nowData[0]).map(key => ({
@@ -65,7 +65,7 @@ let taskNm = "dev/dataInterface"
 	})
 	
 	gulp
-		.src(["./ejs/Interface/index.ts.ejs"])
+		.src(["./ejs/dev/dataInterface/index.ts.ejs"])
 		.pipe(ejs({
 			name: `data`,
 			interfaces: Object.keys(json).map(key => ({
@@ -89,65 +89,7 @@ let taskNm = "dev/dataInterface"
 
 
 /**
- * Create Models directory files.
- * @param	task	"Models"
- * @param	arg1	TableID (ex: IDB001)
- */
-gulp.task("Models", async done => {
-	const t_id = options.arg1
-	/**
-	 * @type dataInterface
-	 */
-	const json = await getData();
-    const table = json.TABLES.find(j => j.t_id === t_id);
-	if(!table) {
-		console.log("data not found");
-		return;
-	}
-    const columns = json.T_COLUMNS.filter(j => j.t_id === t_id);
-    const dataType = json.DATA_TYPE;
-	gulp
-		.src(["./ejs/Models/*.ejs"])
-		.pipe(ejs({
-			table: table,
-			columns: columns,
-			dataType: dataType,
-		}))
-		.pipe(rename((path) => ({ 
-		    dirname: "./"+table.t_id+table.t_name,
-		    basename: path.basename.replace('Hoge', table.t_name),
-		    extname: ""
-        })))
-		.pipe(gulp.dest(distBase));
-
-		
-
-	
-    // const columns = json.T_COLUMNS;
-    // const dataType = json.DATA_TYPE;
-	// new Set(columns.map(x => x.t_id)).forEach(fid => {
-	// 	if(func_id && func_id !== fid){ return; }
-	// 	const list = columns.filter(c => c.t_id === fid);
-	// 	const func = funcList.find(x => x.FuncID === fid);
-	// 	gulp
-	// 		.src(["./ejs/Models/*.ejs"])
-	// 		.pipe(ejs({
-	// 			columns: list,
-	// 			dataType: dataType,
-	// 			name: func.FuncName,
-	// 		}))
-	// 		.pipe(rename((path) => ({ 
-	// 			dirname: `./${func.ServiceName}/${fid}`,
-	// 			basename: path.basename.replace('Hoge', func.FuncName),
-	// 			extname: ""
-	// 		})))
-	// 		.pipe(gulp.dest(distBase+"/Interfaces"));
-	// })
-	done();
-});
-
-/**
- * Create Contexts directory files.
+ * Auto Generate Contexts skelton files.
  * @param	task	"Contexts"
  * @param	arg1	FunctionID (ex: ICT001)
  * @param	arg2	TableID (ex: IDB001)
@@ -197,8 +139,32 @@ gulp.task("Interfaces", async done => {
 	 */
 	const json = await getData();
 	const funcList = json.FuncList;
-	const interfaces = json.INTERFACE;
-
+	function colToInterface(c, dtcol){return {
+		func_id: c.t_id,
+		i_prefix: '',
+		i_name: c.c_name,
+		i_required: c.c_required,
+		i_type: function (){
+			if(["array", "map"].includes(c.c_datatype)){
+				return c.memo;
+			} else {
+				return json.DATA_TYPE.find(x => x.FirestoreType === c.c_datatype)[dtcol];
+			}
+		}(),
+	}}
+	const interfaces = json.INTERFACE
+		.concat(json.T_COLUMNS.map(c => colToInterface(c, "DBType")))
+		.concat(json.FuncList.filter(f => f.FuncType === "Context")
+			.map(f => json.T_COLUMNS
+				.filter(c => c.t_id === `${f.FuncID[0]}DB${f.FuncID.substring(3,5)}`
+					&& !json.INTERFACE.filter(i => i.func_id === f.FuncID
+							&& i.i_prefix === '')
+						.map(i => i.i_name).includes(c.c_name))
+				.map(c => ({...colToInterface(c, "CTType"),
+					func_id: f.FuncID
+				}))
+			).flat()
+		);
 	const serviseSet = new Set(interfaces.map(x => x.func_id[0]));
 	const sBase = distBase + "/Interface/";
 	gulp
@@ -246,7 +212,7 @@ gulp.task("Interfaces", async done => {
 			iprSet.forEach(ipr => {
 				const iprFilteredInterfaces = fidFilteredInterfaces.filter(i => i.i_prefix === ipr);
 				gulp
-					.src(["./ejs/Interface/HogeInterface.ts.ejs"])
+					.src(["./ejs/Interface/*.ejs"])
 					.pipe(ejs({
 						name: `${fid}${func.FuncName}${ipr}`,
 						interfaces: iprFilteredInterfaces
