@@ -2,5 +2,5 @@
 
 'use strict'
 import { execSync }  from 'child_process';
-console.log(execSync('npm run gulp --task=deleteDirectory --arg1=./Interface').toString())
-console.log(execSync('npm run gulp --task=Interfaces --arg1=.').toString())
+console.log(execSync('rm -r -f Interface').toString())
+console.log(execSync('cd node_modules/spelieve-gulp && npx gulp Interfaces --arg1 ../../').toString())
