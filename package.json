@@ -17,7 +17,8 @@
   "homepage": "https://github.com/Ayato-kosaka/spelieve-gulp#readme",
   "type": "module",
   "scripts": {
-    "gulp": "gulp $npm_config_task --arg1 $npm_config_arg1 --arg2 $npm_config_arg2 --arg3 $npm_config_arg3"
+    "gulp": "gulp $npm_config_task --arg1 $npm_config_arg1 --arg2 $npm_config_arg2 --arg3 $npm_config_arg3",
+    "build": "tsc"
   },
   "devDependencies": {
     "ts-node": "^10.9.1"
