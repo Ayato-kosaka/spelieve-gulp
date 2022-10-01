@@ -24,10 +24,6 @@ jobs:
        with:
          node-version: 14.x
          registry-url: https://registry.npmjs.org
-
-     # 必要なモジュールをインストール
-     - name: install node_modules
-       run: npm install
         
      # バージョンを更新
      - name: update version
@@ -39,7 +35,11 @@ jobs:
         git stash pop
         git add .
         git commit -m "release ${VERSION}"
-        git push origin main
+        git push
+
+     # 必要なモジュールをインストール
+     - name: install node_modules
+       run: npm install
         
      # バージョン情報を環境変数として設定
      - name: set version to env
