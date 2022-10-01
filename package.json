@@ -1,6 +1,6 @@
 {
   "name": "spelieve-gulp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Auto generate files for spelieve",
   "bin": {
     "truncateInterfaces": "bin/truncateInterfaces"
