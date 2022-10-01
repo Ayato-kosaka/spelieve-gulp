@@ -40,7 +40,7 @@ jobs:
        run: |
         npm version patch
         git add .
-        git commit -m "release/${VERSION}"
+        git commit -m "release ${VERSION}"
         git push origin main
         
      # バージョン情報を環境変数として設定
