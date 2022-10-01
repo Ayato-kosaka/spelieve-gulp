@@ -1,0 +1,16 @@
+<%#
+req:
+    consts: [
+        {
+            key: string;
+            value: string;
+        }
+    ]
+    paths: [string];
+-%>
+<% if(req.consts) { -%>
+<%- include('../../../ejs/Index/_exportConsts.ejs', req) %>
+<% } -%>
+<% if(req.paths) { -%>
+<%- include('../../../ejs/Index/_exportPaths.ejs', req) -%>
+<% } -%>

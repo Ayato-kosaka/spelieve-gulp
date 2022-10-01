@@ -20,7 +20,7 @@ const options = minimist(process.argv.slice(2), {
 });
 
 /**
- * @typedef { import("./dev/dataInterface").dataInterface } dataInterface
+ * @typedef { import("./src/dataInterface").dataInterface } dataInterface
  */
 
 /**
@@ -48,7 +48,7 @@ const getData = async () => {
  * Create gulp/dataInterface directory files.
  * @param	task	"gulp/dataInterface"
  */
-let taskNm = "dev/dataInterface"
+let taskNm = "src/dataInterface"
  gulp.task(taskNm, async done => {
 	await deleteAsync(`./${taskNm}`)
 	/**
@@ -182,9 +182,11 @@ gulp.task("Interfaces", async done => {
 	const serviseSet = new Set(interfaces.map(x => x.func_id[0]));
 	const sBase = distBase + "/Interface/";
 	gulp
-		.src(["./ejs/Index/index.ts.ejs"])
+		.src(["./src/templates/Interfaces/index.ts.ejs"])
 		.pipe(ejs({
-			paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
+			req: {
+				paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
+			}
 		}))
 		.pipe(rename((path) => ({ 
 			...path,
@@ -198,9 +200,17 @@ gulp.task("Interfaces", async done => {
 		let dBase = sBase + serviceNm;
 		const funcSet = new Set(sidFilteredInterfaces.map(x => x.func_id));
 		gulp
-			.src(["./ejs/Index/index.ts.ejs"])
+			.src(["./src/templates/Interfaces/index.ts.ejs"])
 			.pipe(ejs({
-				paths: Array.from(funcSet).map(x => `./${x}`)
+				req: {
+					consts: [
+						{
+							key: "name",
+							value: `'${serviceNm}'`
+						},
+					],
+					paths: Array.from(funcSet).map(x => `./${x}`)
+				}
 			}))
 			.pipe(rename((path) => ({ 
 				...path,
@@ -214,9 +224,15 @@ gulp.task("Interfaces", async done => {
 			let fdBase = dBase + "/" + fid;
 			const iprSet = new Set(fidFilteredInterfaces.map(x => x.i_prefix));
 			gulp
-				.src(["./ejs/Index/index.ts.ejs"])
+				.src(["./src/templates/Interfaces/index.ts.ejs"])
 				.pipe(ejs({
-					paths: Array.from(iprSet).map(x => `./${func.FuncName}${x}Interface`)
+					req: {
+						consts: [{
+							key: "name",
+							value: `'${func.FuncName}'`
+						}],
+						paths: Array.from(iprSet).map(x => `./${func.FuncName}${x}Interface`)
+					}
 				}))
 				.pipe(rename((path) => ({ 
 					...path,
