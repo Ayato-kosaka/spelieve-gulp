@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "Auto generate files for spelieve",
   "bin": {
-    "truncateInterfaces": "bin/truncateInterfaces"
+    "truncateInterfaces": "bin/truncateInterfaces.js"
   },
   "repository": {
     "type": "git",
