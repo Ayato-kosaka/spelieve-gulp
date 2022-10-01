@@ -8,7 +8,7 @@ import { deleteAsync } from 'del';
 dotenv.config();
 
 const srcBase = '.';
-const distBase = './dist';
+let distBase = './dist';
 
 const options = minimist(process.argv.slice(2), {
   string: ['arg1', 'arg2', 'arg3'],
@@ -30,6 +30,18 @@ const getData = async () => {
 	const response = await fetch(process.env.PG_DATA_ENDPOINT/* as RequestInfo */);
 	return await response.json();
 };
+
+/**
+ * Delete arg1 directory.
+ * @param	task	"gulp/dataInterface"
+ * @param	arg1	directoryPath
+ */
+ gulp.task("deleteDirectory", async done => {
+	const directoryPath = options.arg1;
+	await deleteAsync(`${directoryPath}`)
+	done()
+ });
+
 
 
 /**
@@ -132,8 +144,10 @@ gulp.task("Contexts", async done => {
 /**
  * Create Interface files.
  * @param	task	"Interfaces"
+ * @param	arg1	distBase
  */
 gulp.task("Interfaces", async done => {
+	distBase = options.arg1 || distBase;
 	/**
 	 * @type dataInterface
 	 */
