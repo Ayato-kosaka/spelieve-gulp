@@ -28,6 +28,8 @@ jobs:
      # バージョンを更新
      - name: update version
        run: |
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
         npm version patch
         git push
 
