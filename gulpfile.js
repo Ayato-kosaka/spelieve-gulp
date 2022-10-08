@@ -134,7 +134,7 @@ gulp.task("Contexts", async done => {
 		}))
 		.pipe(rename((path) => ({ 
 		    dirname: "./"+func_id+func.FuncName,
-		    basename: path.basename.replace('Hoge', table.t_name),
+		    basename: path.basename.replace('Hoge', func.FuncName),
 		    extname: ""
         })))
 		.pipe(gulp.dest(distBase));
