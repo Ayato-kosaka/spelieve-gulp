@@ -205,8 +205,8 @@ gulp.task("Interfaces", async done => {
 				req: {
 					consts: [
 						{
-							key: "name",
-							value: `'${serviceNm}'`
+							key: `${sid}Service`,
+							value: JSON.stringify({'name': serviceNm}, null , "\t")
 						},
 					],
 					paths: Array.from(funcSet).map(x => `./${x}`)
@@ -228,8 +228,8 @@ gulp.task("Interfaces", async done => {
 				.pipe(ejs({
 					req: {
 						consts: [{
-							key: "name",
-							value: `'${func.FuncName}'`
+							key: func.FuncID,
+							value: JSON.stringify({'name': func.FuncName}, null , "\t")
 						}],
 						paths: Array.from(iprSet).map(x => `./${func.FuncName}${x}Interface`)
 					}
