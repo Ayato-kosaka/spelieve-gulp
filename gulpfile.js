@@ -262,7 +262,7 @@ gulp.task("FuncList", async done => {
 	const json = await getData();
 	const funcList = json.FuncList;
 	gulp
-		.src(["./src/templates/FuncList/index.js.ejs"])
+		.src(["./src/templates/FuncList/index.ts.ejs"])
 		.pipe(ejs({
 			req: {
 				consts: funcList.map(func => (
