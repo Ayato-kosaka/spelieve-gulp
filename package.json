@@ -24,6 +24,7 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "child_process": "^1.0.2",
     "del": "^7.0.0",
     "dotenv": "^16.0.1",
     "gulp": "^4.0.2",
@@ -31,6 +32,6 @@
     "gulp-rename": "^2.0.0",
     "minimist": "^1.2.6",
     "node-fetch": "^3.2.10",
-    "child_process": "^1.0.2"
+    "react-native-google-places-autocomplete": "^2.4.1"
   }
 }

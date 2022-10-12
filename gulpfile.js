@@ -203,12 +203,6 @@ gulp.task("Interfaces", async done => {
 			.src(["./src/templates/Interfaces/index.ts.ejs"])
 			.pipe(ejs({
 				req: {
-					consts: [
-						{
-							key: `${sid}Service`,
-							value: JSON.stringify({'name': serviceNm}, null , "\t")
-						},
-					],
 					paths: Array.from(funcSet).map(x => `./${x}`)
 				}
 			}))
@@ -227,10 +221,6 @@ gulp.task("Interfaces", async done => {
 				.src(["./src/templates/Interfaces/index.ts.ejs"])
 				.pipe(ejs({
 					req: {
-						consts: [{
-							key: func.FuncID,
-							value: JSON.stringify({'name': func.FuncName}, null , "\t")
-						}],
 						paths: Array.from(iprSet).map(x => `./${func.FuncName}${x}Interface`)
 					}
 				}))
@@ -256,5 +246,36 @@ gulp.task("Interfaces", async done => {
 			})
 		})
 	})
+	done();
+});
+
+/**
+ * Create Funclist files.
+ * @param	task	"FuncList"
+ * @param	arg1	distBase
+ */
+gulp.task("FuncList", async done => {
+	distBase = options.arg1 || distBase;
+	/**
+	 * @type dataInterface
+	 */
+	const json = await getData();
+	const funcList = json.FuncList;
+	gulp
+		.src(["./src/templates/FuncList/index.js.ejs"])
+		.pipe(ejs({
+			req: {
+				consts: funcList.map(func => (
+					{
+						key: func.FuncID,
+						value: JSON.stringify({'name': func.FuncName}, null , "\t")
+					}))
+			}
+		}))
+		.pipe(rename((path) => ({ 
+			...path,
+			extname: ""
+		})))
+		.pipe(gulp.dest(distBase + "/Functions/"));
 	done();
 });
