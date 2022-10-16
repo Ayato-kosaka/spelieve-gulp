@@ -1,0 +1,17 @@
+<%#
+req:
+    name: string;
+    interfaces: [
+        i_name: string;
+        i_required: string;
+        i_type: string;
+    ]
+-%>
+/**
+ * Export interface of <%- req.name %> object.
+ */
+export interface <%- req.name %>Interface {
+<% req.interfaces.forEach((interface) => { -%>
+    <%- interface.i_name %><%- interface.i_required ? '' : '?'  %>: <%- interface.i_type %>;
+<% }); -%>
+} 

@@ -12,6 +12,7 @@ req:
     ]
 -%>
 <% req.imports?.forEach((imp) => { -%>
+// @ts-ignore
 <%- include('../../ejs/Import/_import.ejs', {req:imp}) %>
 <% }) -%>
 <%- include('../../ejs/Interface/_exportInterface.ejs', {req:req}) %>

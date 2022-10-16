@@ -21,6 +21,7 @@ const options = minimist(process.argv.slice(2), {
 
 /**
  * @typedef { import("./dev/dataInterface").dataInterface } dataInterface
+ * @typedef { import("./dev/dataInterface/FuncList").FuncListInterface } FuncListInterface
  */
 
 /**
@@ -31,11 +32,11 @@ const getData = async () => {
 	return await response.json();
 };
 
-/**
+/************************************************************************************
  * Delete arg1 directory.
  * @param	task	"gulp/dataInterface"
  * @param	arg1	directoryPath
- */
+ ************************************************************************************/
  gulp.task("deleteDirectory", async done => {
 	const directoryPath = options.arg1;
 	await deleteAsync(`${directoryPath}`)
@@ -44,10 +45,10 @@ const getData = async () => {
 
 
 
-/**
- * Create gulp/dataInterface directory files.
- * @param	task	"gulp/dataInterface"
- */
+/************************************************************************************
+ * Create dev/dataInterface directory files.
+ * @param	task	"dev/dataInterface"
+ ************************************************************************************/
 let taskNm = "dev/dataInterface"
  gulp.task(taskNm, async done => {
 	await deleteAsync(`./${taskNm}`)
@@ -104,13 +105,13 @@ let taskNm = "dev/dataInterface"
 });
 
 
-/**
+/************************************************************************************
  * Auto Generate Contexts skelton files.
  * @param	task	"Contexts"
  * @param	arg1	FunctionID (ex: ICT001)
  * @param	arg2	TableID (ex: IDB001)
  * @param	arg3	option ("readOne" | "readArray" | "readMap")
- */
+ ************************************************************************************/
 gulp.task("Contexts", async done => {
 	const func_id = options.arg1;
 	const t_id = options.arg2;
@@ -145,18 +146,18 @@ gulp.task("Contexts", async done => {
 	done();
 })
 
-/**
+/************************************************************************************
  * Create Interface files.
  * @param	task	"Interfaces"
  * @param	arg1	distBase
- */
+ ************************************************************************************/
 gulp.task("Interfaces", async done => {
 	distBase = options.arg1 || distBase;
 	/**
 	 * @type dataInterface
 	 */
 	const json = await getData();
-	const funcList = json.FuncList;
+	const funcList = json.FuncList[0];
 	function colToInterface(c, dtcol){return {
 		func_id: c.t_id,
 		i_prefix: '',
@@ -170,6 +171,8 @@ gulp.task("Interfaces", async done => {
 			}
 		}(),
 	}}
+	
+	// INTERFACE と T_COLUMNS を統合する
 	const interfaces = json.INTERFACE
 		.concat(json.T_COLUMNS.map(c => colToInterface(c, "DBType")))
 		.concat(json.FuncList.filter(f => f.FuncType === "Context")
@@ -184,20 +187,7 @@ gulp.task("Interfaces", async done => {
 			).flat()
 		);
 	const serviseSet = new Set(interfaces.map(x => x.func_id[0]));
-	const sBase = distBase + "/Interface/";
-	gulp
-		.src(["./src/templates/Interfaces/index.ts.ejs"])
-		.pipe(ejs({
-			req: {
-				paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
-			}
-		}))
-		.pipe(rename((path) => ({ 
-			...path,
-			extname: ""
-		})))
-		.pipe(gulp.dest(sBase));
-	done();
+	const sBase = distBase + "/Interfaces/";
 	serviseSet.forEach(sid => {
 		const sidFilteredInterfaces = interfaces.filter(x => x.func_id[0] === sid);
 		const serviceNm = funcList.find(x => x.ServiceID === sid).ServiceName
@@ -253,11 +243,11 @@ gulp.task("Interfaces", async done => {
 	done();
 });
 
-/**
+/************************************************************************************
  * Create Funclist files.
  * @param	task	"FuncList"
  * @param	arg1	distBase
- */
+ ************************************************************************************/
 gulp.task("FuncList", async done => {
 	distBase = options.arg1 || distBase;
 	/**
