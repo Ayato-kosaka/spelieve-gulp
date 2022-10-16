@@ -1,3 +1,11 @@
+<%#
+consts: [
+    {
+        key: string;
+        value: string;
+    }
+]
+-%>
 <% consts.forEach((c) => { -%>
 export const <%- c.key %> = <%- c.value %>;
 <% }) -%>

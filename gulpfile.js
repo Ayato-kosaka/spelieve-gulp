@@ -20,7 +20,7 @@ const options = minimist(process.argv.slice(2), {
 });
 
 /**
- * @typedef { import("./src/dataInterface").dataInterface } dataInterface
+ * @typedef { import("./dev/dataInterface").dataInterface } dataInterface
  */
 
 /**
@@ -48,7 +48,7 @@ const getData = async () => {
  * Create gulp/dataInterface directory files.
  * @param	task	"gulp/dataInterface"
  */
-let taskNm = "src/dataInterface"
+let taskNm = "dev/dataInterface"
  gulp.task(taskNm, async done => {
 	await deleteAsync(`./${taskNm}`)
 	/**
@@ -56,21 +56,23 @@ let taskNm = "src/dataInterface"
 	 */
 	const json = await getData();
 	
-	Object.keys(json).forEach(dataNm => {
-		const nowData = json[dataNm];
+	Object.keys(json).forEach(key => {
+		const nowData = json[key];
 		gulp
-			.src(["./ejs/Interface/*.ejs"])
+			.src(["./src/dataInterface/Hoge.ts.ejs"])
 			.pipe(ejs({
-				name: `${dataNm}`,
-				interfaces: Object.keys(nowData[0]).map(key => ({
-					i_name: key,
-					i_required: true,
-					i_type: "string",
-				}))
+				req: {
+					name: `${key}`,
+					interfaces: Object.keys(nowData[0]).map(key => ({
+						i_name: key,
+						i_required: true,
+						i_type: "string",
+					}))
+				}
 			}))
 			.pipe(rename((path) => ({ 
 				dirname: `./${taskNm}`,
-				basename: path.basename.replace('Hoge', `${dataNm}`),
+				basename: path.basename.replace('Hoge', `${key}`),
 				extname: ""
 			})))
 			.pipe(gulp.dest("./"));

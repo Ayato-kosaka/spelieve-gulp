@@ -1,0 +1,17 @@
+<%#
+req:
+    imports: [
+        as: string;
+        path: string;
+    ]
+    name: string;
+    interfaces: [
+        i_name: string;
+        i_required: string;
+        i_type: string;
+    ]
+-%>
+<% req.imports?.forEach((imp) => { -%>
+<%- include('.../../../ejs/Import/_import.ejs', {req:imp}) %>
+<% }) -%>
+<%- include('.../../../ejs/Interface/_exportInterface.ejs', {req:req}) %>
