@@ -21,6 +21,7 @@ const options = minimist(process.argv.slice(2), {
 
 /**
  * @typedef { import("./dev/dataInterface").dataInterface } dataInterface
+ * @typedef { import("./dev/dataInterface/FuncList").FuncListInterface } FuncListInterface
  */
 
 /**
@@ -31,11 +32,11 @@ const getData = async () => {
 	return await response.json();
 };
 
-/**
+/************************************************************************************
  * Delete arg1 directory.
  * @param	task	"gulp/dataInterface"
  * @param	arg1	directoryPath
- */
+ ************************************************************************************/
  gulp.task("deleteDirectory", async done => {
 	const directoryPath = options.arg1;
 	await deleteAsync(`${directoryPath}`)
@@ -44,10 +45,10 @@ const getData = async () => {
 
 
 
-/**
- * Create gulp/dataInterface directory files.
- * @param	task	"gulp/dataInterface"
- */
+/************************************************************************************
+ * Create dev/dataInterface directory files.
+ * @param	task	"dev/dataInterface"
+ ************************************************************************************/
 let taskNm = "dev/dataInterface"
  gulp.task(taskNm, async done => {
 	await deleteAsync(`./${taskNm}`)
@@ -59,7 +60,7 @@ let taskNm = "dev/dataInterface"
 	Object.keys(json).forEach(key => {
 		const nowData = json[key];
 		gulp
-			.src(["./src/dataInterface/Hoge.ts.ejs"])
+			.src(["./src/templates/dataInterface/Hoge.ts.ejs"])
 			.pipe(ejs({
 				req: {
 					name: `${key}`,
@@ -79,7 +80,7 @@ let taskNm = "dev/dataInterface"
 	})
 	
 	gulp
-		.src(["./src/dataInterface/Hoge.ts.ejs"])
+		.src(["./src/templates/dataInterface/Hoge.ts.ejs"])
 		.pipe(ejs({
 			req: {
 				name: `data`,
@@ -89,8 +90,8 @@ let taskNm = "dev/dataInterface"
 					i_type: `Array<${key}Interface>`,
 				})),
 				imports: Object.keys(json).map(key => ({
-					as: `${key}Interface`,
-					path: `./${key}Interface`
+					contents: [`${key}Interface`],
+					path: `./${key}`
 				}))
 			}
 		}))
@@ -104,13 +105,13 @@ let taskNm = "dev/dataInterface"
 });
 
 
-/**
+/************************************************************************************
  * Auto Generate Contexts skelton files.
  * @param	task	"Contexts"
  * @param	arg1	FunctionID (ex: ICT001)
  * @param	arg2	TableID (ex: IDB001)
  * @param	arg3	option ("readOne" | "readArray" | "readMap")
- */
+ ************************************************************************************/
 gulp.task("Contexts", async done => {
 	const func_id = options.arg1;
 	const t_id = options.arg2;
@@ -128,7 +129,7 @@ gulp.task("Contexts", async done => {
 		return;
 	}
 	gulp
-		.src(["./ejs/Contexts/*.ejs"])
+		.src(["./src/ejs/Contexts/*.ejs"])
 		.pipe(ejs({
 			func: func,
 			option: option,
@@ -145,11 +146,11 @@ gulp.task("Contexts", async done => {
 	done();
 })
 
-/**
+/************************************************************************************
  * Create Interface files.
  * @param	task	"Interfaces"
  * @param	arg1	distBase
- */
+ ************************************************************************************/
 gulp.task("Interfaces", async done => {
 	distBase = options.arg1 || distBase;
 	/**
@@ -170,8 +171,9 @@ gulp.task("Interfaces", async done => {
 			}
 		}(),
 	}}
+	
+	// INTERFACE と T_COLUMNS を統合する
 	const interfaces = json.INTERFACE
-		.concat(json.T_COLUMNS.map(c => colToInterface(c, "DBType")))
 		.concat(json.FuncList.filter(f => f.FuncType === "Context")
 			.map(f => json.T_COLUMNS
 				.filter(c => c.t_id === `${f.FuncID[0]}DB${f.FuncID.substring(3,5)}`
@@ -184,43 +186,33 @@ gulp.task("Interfaces", async done => {
 			).flat()
 		);
 	const serviseSet = new Set(interfaces.map(x => x.func_id[0]));
-	const sBase = distBase + "/Interface/";
+	const sBase = distBase + "/Interfaces/";
+
+	// Interface 配下の index.ts を生成する
 	gulp
-		.src(["./src/templates/Interfaces/index.ts.ejs"])
-		.pipe(ejs({
-			req: {
-				paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
-			}
-		}))
-		.pipe(rename((path) => ({ 
-			...path,
-			extname: ""
-		})))
-		.pipe(gulp.dest(sBase));
-	done();
+	.src(["./src/templates/Interfaces/index.ts.ejs"])
+	.pipe(ejs({
+		req: {
+			paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
+		}
+	}))
+	.pipe(rename((path) => ({ 
+		...path,
+		extname: ""
+	})))
+	.pipe(gulp.dest(sBase));
 	serviseSet.forEach(sid => {
 		const sidFilteredInterfaces = interfaces.filter(x => x.func_id[0] === sid);
 		const serviceNm = funcList.find(x => x.ServiceID === sid).ServiceName
 		let dBase = sBase + serviceNm;
 		const funcSet = new Set(sidFilteredInterfaces.map(x => x.func_id));
-		gulp
-			.src(["./src/templates/Interfaces/index.ts.ejs"])
-			.pipe(ejs({
-				req: {
-					paths: Array.from(funcSet).map(x => `./${x}`)
-				}
-			}))
-			.pipe(rename((path) => ({ 
-				...path,
-				extname: ""
-			})))
-			.pipe(gulp.dest(dBase));
-		done();
 		funcSet.forEach(fid => {
 			const fidFilteredInterfaces = sidFilteredInterfaces.filter(x => x.func_id === fid);
 			const func = funcList.find(x => x.FuncID === fid);
 			let fdBase = dBase + "/" + fid;
 			const iprSet = new Set(fidFilteredInterfaces.map(x => x.i_prefix));
+
+			// Service 配下の index.ts を生成する
 			gulp
 				.src(["./src/templates/Interfaces/index.ts.ejs"])
 				.pipe(ejs({
@@ -235,11 +227,30 @@ gulp.task("Interfaces", async done => {
 				.pipe(gulp.dest(fdBase));
 			iprSet.forEach(ipr => {
 				const iprFilteredInterfaces = fidFilteredInterfaces.filter(i => i.i_prefix === ipr);
+
+				// HogeInterface を生成する
 				gulp
-					.src(["./ejs/Interface/*.ejs"])
+					.src(["./src/templates/Interfaces/HogeInterface.ts.ejs"])
 					.pipe(ejs({
-						name: `${fid}${func.FuncName}${ipr}`,
-						interfaces: iprFilteredInterfaces
+						req: {
+							imports: [
+								{
+									contents: ["GeoPoint", "Timestamp", "DocumentReference"],
+									path: "@firebase/firestore-types"
+								},
+								{
+									default: "React",
+									contents: ["ReactNode"],
+									path: "react"
+								},
+								{
+									contents: ["GooglePlaceData", "GooglePlaceDetail"],
+									path: "react-native-google-places-autocomplete"
+								},
+							],
+							name: `${func.FuncName}${ipr}`,
+							interfaces: iprFilteredInterfaces
+						}
 					}))
 					.pipe(rename((path) => ({ 
 						...path,
@@ -253,33 +264,82 @@ gulp.task("Interfaces", async done => {
 	done();
 });
 
-/**
- * Create Funclist files.
- * @param	task	"FuncList"
+/************************************************************************************
+ * Create Consts files.
+ * @param	task	"Consts"
  * @param	arg1	distBase
- */
-gulp.task("FuncList", async done => {
+ ************************************************************************************/
+gulp.task("Consts", async done => {
+	distBase = options.arg1 || distBase;
+	/**
+	 * @type dataInterface
+	 */
+	const json = await getData();
+	const consts = json.CONST;
+	const funcList = json.FuncList;
+	new Set(consts.map(con => con.ServiceID)).forEach(serviceID => {
+		const serviceName = funcList.find(f => f.ServiceID === serviceID).ServiceName
+		gulp
+			.src(["./src/templates/Consts/index.ts.ejs"])
+			.pipe(ejs({
+				req: {
+					service: serviceName,
+					consts: consts.filter(c => c.ServiceID === serviceID)
+						.map(c => (
+						{
+							key: c.key,
+							value: c.value
+						}))
+				}
+			}))
+			.pipe(rename((path) => ({ 
+				...path,
+				extname: ""
+			})))
+			.pipe(gulp.dest(`${distBase}/Consts/${serviceName}`));
+	})
+	done();
+});
+
+/************************************************************************************
+ * Create Models files.
+ * @param	task	"Models"
+ * @param	arg1	distBase
+ ************************************************************************************/
+gulp.task("Models", async done => {
 	distBase = options.arg1 || distBase;
 	/**
 	 * @type dataInterface
 	 */
 	const json = await getData();
 	const funcList = json.FuncList;
-	gulp
-		.src(["./src/templates/FuncList/index.ts.ejs"])
-		.pipe(ejs({
-			req: {
-				consts: funcList.map(func => (
-					{
-						key: func.FuncID,
-						value: JSON.stringify({'name': func.FuncName}, null , "\t")
-					}))
-			}
-		}))
-		.pipe(rename((path) => ({ 
-			...path,
-			extname: ""
-		})))
-		.pipe(gulp.dest(distBase + "/Functions/"));
+	const tables = json.TABLES;
+	const columns = json.T_COLUMNS;
+
+	new Set(tables.map(tab => tab.t_id[0])).forEach(serviceID => {
+		const serviceName = funcList.find(f => f.ServiceID === serviceID).ServiceName
+		tables.filter(tab => tab.t_id[0]===serviceID).forEach(tab => {
+			gulp
+				.src(["./src/templates/Models/Hoge.ts.ejs"])
+				.pipe(ejs({
+					req: {
+						ID: tab.t_id,
+						name: tab.t_name,
+						cols: columns.filter(c => c.t_id === tab.t_id)
+							.map(c => (
+							{
+								...c,
+								c_datatype: ["array", "map"].includes(c.c_datatype) ? c.memo : json.DATA_TYPE.find(d => d.FirestoreType === c.c_datatype).DBType								
+							}))
+					}
+				}))
+				.pipe(rename((path) => ({ 
+					...path,
+					basename: path.basename.replace('Hoge', `${tab.t_name}`),
+					extname: ""
+				})))
+				.pipe(gulp.dest(`${distBase}/Models/${serviceName}/${tab.t_id}`));
+			})
+		})
 	done();
 });

@@ -1,0 +1,7 @@
+<%#
+req:
+    paths: string[];
+-%>
+<% if(req.paths) { -%>
+<%- include('../../ejs/Index/_exportPaths.ejs', req) -%>
+<% } -%>

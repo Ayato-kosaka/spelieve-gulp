@@ -1,0 +1,31 @@
+<%#
+req:
+    ID: string;
+    name: string;
+    cols: [
+      c_name: string;
+      c_required: boolean;
+      c_datatype: string;
+    ]
+-%>
+import { GeoPoint, Timestamp, DocumentReference } from '@firebase/firestore-types';
+import * as SpelieveInterface from '../../../Interfaces';
+
+/**
+ * Export <%- req.ID %><%- req.name %> model class.
+ */
+export class <%- req.name %> {
+
+  static modelName = '<%- req.name %>';
+
+  static Cols  = {
+<% req.cols?.forEach(col => { -%>
+    <%- col.c_name %>: '<%- col.c_name %>',
+<% }) -%>
+  }
+
+<% req.cols?.forEach(col => { -%>
+  <%- col.c_name %><%- col.c_required ? '' : '?'  %>: <%- col.c_datatype %>;
+
+<% }) -%>
+}

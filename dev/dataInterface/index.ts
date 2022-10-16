@@ -1,11 +1,11 @@
-import { TABLESInterface } from './TABLESInterface';
-import { T_COLUMNSInterface } from './T_COLUMNSInterface';
-import { VIEWInterface } from './VIEWInterface';
-import { INTERFACEInterface } from './INTERFACEInterface';
-import { CONSTInterface } from './CONSTInterface';
-import { SECURITY_RULESInterface } from './SECURITY_RULESInterface';
-import { DATA_TYPEInterface } from './DATA_TYPEInterface';
-import { FuncListInterface } from './FuncListInterface';
+import { TABLESInterface } from './TABLES';
+import { T_COLUMNSInterface } from './T_COLUMNS';
+import { VIEWInterface } from './VIEW';
+import { INTERFACEInterface } from './INTERFACE';
+import { CONSTInterface } from './CONST';
+import { SECURITY_RULESInterface } from './SECURITY_RULES';
+import { DATA_TYPEInterface } from './DATA_TYPE';
+import { FuncListInterface } from './FuncList';
 /**
  * Export interface of data object.
  */
