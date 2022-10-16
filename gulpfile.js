@@ -79,18 +79,20 @@ let taskNm = "dev/dataInterface"
 	})
 	
 	gulp
-		.src(["./ejs/dev/dataInterface/index.ts.ejs"])
+		.src(["./src/dataInterface/Hoge.ts.ejs"])
 		.pipe(ejs({
-			name: `data`,
-			interfaces: Object.keys(json).map(key => ({
-				i_name: key,
-				i_required: true,
-				i_type: `Array<${key}Interface>`,
-			})),
-			imports: Object.keys(json).map(key => ({
-				as: `${key}Interface`,
-				path: `./${key}Interface`
-			}))
+			req: {
+				name: `data`,
+				interfaces: Object.keys(json).map(key => ({
+					i_name: key,
+					i_required: true,
+					i_type: `Array<${key}Interface>`,
+				})),
+				imports: Object.keys(json).map(key => ({
+					as: `${key}Interface`,
+					path: `./${key}Interface`
+				}))
+			}
 		}))
 		.pipe(rename((path) => ({ 
 			dirname: `./${taskNm}`,

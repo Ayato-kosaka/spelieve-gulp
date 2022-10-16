@@ -12,6 +12,6 @@ req:
     ]
 -%>
 <% req.imports?.forEach((imp) => { -%>
-<%- include('.../../../ejs/Import/_import.ejs', {req:imp}) %>
+<%- include('../../ejs/Import/_import.ejs', {req:imp}) %>
 <% }) -%>
-<%- include('.../../../ejs/Interface/_exportInterface.ejs', {req:req}) %>
+<%- include('../../ejs/Interface/_exportInterface.ejs', {req:req}) %>

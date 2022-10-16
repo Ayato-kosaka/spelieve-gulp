@@ -1,6 +1,3 @@
-import { GeoPoint, Timestamp, DocumentReference } from "firebase/firestore";
-import { React , ReactNode } from 'react';
-
 /**
  * Export interface of SECURITY_RULES object.
  */
