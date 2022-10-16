@@ -1,18 +1,10 @@
-// @ts-ignore
 import { TABLESInterface } from './TABLES';
-// @ts-ignore
 import { T_COLUMNSInterface } from './T_COLUMNS';
-// @ts-ignore
 import { VIEWInterface } from './VIEW';
-// @ts-ignore
 import { INTERFACEInterface } from './INTERFACE';
-// @ts-ignore
 import { CONSTInterface } from './CONST';
-// @ts-ignore
 import { SECURITY_RULESInterface } from './SECURITY_RULES';
-// @ts-ignore
 import { DATA_TYPEInterface } from './DATA_TYPE';
-// @ts-ignore
 import { FuncListInterface } from './FuncList';
 /**
  * Export interface of data object.

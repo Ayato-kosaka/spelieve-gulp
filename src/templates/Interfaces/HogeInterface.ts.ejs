@@ -1,7 +1,7 @@
 <%#
 req:
     imports: [
-        as: string;
+        contents: string[];
         path: string;
     ]
     name: string;
@@ -12,7 +12,9 @@ req:
     ]
 -%>
 <% req.imports?.forEach((imp) => { -%>
-// @ts-ignore
 <%- include('../../ejs/Import/_import.ejs', {req:imp}) %>
 <% }) -%>
-<%- include('../../ejs/Interface/_exportInterface.ejs', {req:req}) %>
+<%- include('../../ejs/Import/_importRename.ejs', {req:{name:"SpelieveInterface",path:'../../../Interfaces'}}) -%>
+
+
+<%- include('../../ejs/Interface/_exportInterface.ejs', req) -%>

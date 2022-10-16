@@ -60,7 +60,7 @@ let taskNm = "dev/dataInterface"
 	Object.keys(json).forEach(key => {
 		const nowData = json[key];
 		gulp
-			.src(["./src/dataInterface/Hoge.ts.ejs"])
+			.src(["./src/templates/dataInterface/Hoge.ts.ejs"])
 			.pipe(ejs({
 				req: {
 					name: `${key}`,
@@ -80,7 +80,7 @@ let taskNm = "dev/dataInterface"
 	})
 	
 	gulp
-		.src(["./src/dataInterface/Hoge.ts.ejs"])
+		.src(["./src/templates/dataInterface/Hoge.ts.ejs"])
 		.pipe(ejs({
 			req: {
 				name: `data`,
@@ -90,7 +90,7 @@ let taskNm = "dev/dataInterface"
 					i_type: `Array<${key}Interface>`,
 				})),
 				imports: Object.keys(json).map(key => ({
-					as: `${key}Interface`,
+					contents: [`${key}Interface`],
 					path: `./${key}`
 				}))
 			}
@@ -129,7 +129,7 @@ gulp.task("Contexts", async done => {
 		return;
 	}
 	gulp
-		.src(["./ejs/Contexts/*.ejs"])
+		.src(["./src/ejs/Contexts/*.ejs"])
 		.pipe(ejs({
 			func: func,
 			option: option,
@@ -157,7 +157,7 @@ gulp.task("Interfaces", async done => {
 	 * @type dataInterface
 	 */
 	const json = await getData();
-	const funcList = json.FuncList[0];
+	const funcList = json.FuncList;
 	function colToInterface(c, dtcol){return {
 		func_id: c.t_id,
 		i_prefix: '',
@@ -193,19 +193,6 @@ gulp.task("Interfaces", async done => {
 		const serviceNm = funcList.find(x => x.ServiceID === sid).ServiceName
 		let dBase = sBase + serviceNm;
 		const funcSet = new Set(sidFilteredInterfaces.map(x => x.func_id));
-		gulp
-			.src(["./src/templates/Interfaces/index.ts.ejs"])
-			.pipe(ejs({
-				req: {
-					paths: Array.from(funcSet).map(x => `./${x}`)
-				}
-			}))
-			.pipe(rename((path) => ({ 
-				...path,
-				extname: ""
-			})))
-			.pipe(gulp.dest(dBase));
-		done();
 		funcSet.forEach(fid => {
 			const fidFilteredInterfaces = sidFilteredInterfaces.filter(x => x.func_id === fid);
 			const func = funcList.find(x => x.FuncID === fid);
@@ -225,11 +212,30 @@ gulp.task("Interfaces", async done => {
 				.pipe(gulp.dest(fdBase));
 			iprSet.forEach(ipr => {
 				const iprFilteredInterfaces = fidFilteredInterfaces.filter(i => i.i_prefix === ipr);
+
+				// HogeInterfaceを生成する
 				gulp
-					.src(["./ejs/Interface/*.ejs"])
+					.src(["./src/templates/Interfaces/HogeInterface.ts.ejs"])
 					.pipe(ejs({
-						name: `${fid}${func.FuncName}${ipr}`,
-						interfaces: iprFilteredInterfaces
+						req: {
+							imports: [
+								{
+									contents: ["GeoPoint", "Timestamp", "DocumentReference"],
+									path: "@firebase/firestore-types"
+								},
+								{
+									default: "React",
+									contents: ["ReactNode"],
+									path: "react"
+								},
+								{
+									contents: ["GooglePlaceData", "GooglePlaceDetail"],
+									path: "react-native-google-places-autocomplete"
+								},
+							],
+							name: `${fid}${func.FuncName}${ipr}`,
+							interfaces: iprFilteredInterfaces
+						}
 					}))
 					.pipe(rename((path) => ({ 
 						...path,
