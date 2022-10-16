@@ -91,7 +91,7 @@ let taskNm = "dev/dataInterface"
 				})),
 				imports: Object.keys(json).map(key => ({
 					as: `${key}Interface`,
-					path: `./${key}Interface`
+					path: `./${key}`
 				}))
 			}
 		}))

@@ -1,18 +1,19 @@
-import { TABLESInterface } from './TABLESInterface';
 // @ts-ignore
-import { T_COLUMNSInterface } from './T_COLUMNSInterface';
+import { TABLESInterface } from './TABLES';
 // @ts-ignore
-import { VIEWInterface } from './VIEWInterface';
+import { T_COLUMNSInterface } from './T_COLUMNS';
 // @ts-ignore
-import { INTERFACEInterface } from './INTERFACEInterface';
+import { VIEWInterface } from './VIEW';
 // @ts-ignore
-import { CONSTInterface } from './CONSTInterface';
+import { INTERFACEInterface } from './INTERFACE';
 // @ts-ignore
-import { SECURITY_RULESInterface } from './SECURITY_RULESInterface';
+import { CONSTInterface } from './CONST';
 // @ts-ignore
-import { DATA_TYPEInterface } from './DATA_TYPEInterface';
+import { SECURITY_RULESInterface } from './SECURITY_RULES';
 // @ts-ignore
-import { FuncListInterface } from './FuncListInterface';
+import { DATA_TYPEInterface } from './DATA_TYPE';
+// @ts-ignore
+import { FuncListInterface } from './FuncList';
 /**
  * Export interface of data object.
  */
@@ -24,7 +25,5 @@ export interface dataInterface {
     CONST: Array<CONSTInterface>;
     SECURITY_RULES: Array<SECURITY_RULESInterface>;
     DATA_TYPE: Array<DATA_TYPEInterface>;
-    FuncList: FuncListInterface[];
+    FuncList: Array<FuncListInterface>;
 } 
-const c:TABLESInterface;
-c
