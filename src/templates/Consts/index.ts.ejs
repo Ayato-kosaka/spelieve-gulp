@@ -1,5 +1,6 @@
 <%#
 req:
+    service: string;
     consts: [
         {
             key: string;
@@ -7,6 +8,9 @@ req:
         }
     ]
 -%>
+/**
+ * Export <%- req.service %> service's CONST values.
+ */
 <% req.consts.forEach(cons => { -%>
 <%- include('../../ejs/Index/_exportConst.ejs', {req: cons}) %>
 <% }) -%>

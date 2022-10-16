@@ -1,7 +1,0 @@
-<%#
-req:
-    default: string;
-    contents: string[];
-    path: string;
--%>
-import <%- req.default ? `${req.default}, ` : '' %>{ <%- req.contents.join(', ') %> } from '<%- req.path %>';

@@ -174,7 +174,6 @@ gulp.task("Interfaces", async done => {
 	
 	// INTERFACE と T_COLUMNS を統合する
 	const interfaces = json.INTERFACE
-		.concat(json.T_COLUMNS.map(c => colToInterface(c, "DBType")))
 		.concat(json.FuncList.filter(f => f.FuncType === "Context")
 			.map(f => json.T_COLUMNS
 				.filter(c => c.t_id === `${f.FuncID[0]}DB${f.FuncID.substring(3,5)}`
@@ -188,6 +187,20 @@ gulp.task("Interfaces", async done => {
 		);
 	const serviseSet = new Set(interfaces.map(x => x.func_id[0]));
 	const sBase = distBase + "/Interfaces/";
+
+	// Interface 配下の index.ts を生成する
+	gulp
+	.src(["./src/templates/Interfaces/index.ts.ejs"])
+	.pipe(ejs({
+		req: {
+			paths: Array.from(serviseSet).map(x => `./${funcList.find(y => y.ServiceID === x).ServiceName}`)
+		}
+	}))
+	.pipe(rename((path) => ({ 
+		...path,
+		extname: ""
+	})))
+	.pipe(gulp.dest(sBase));
 	serviseSet.forEach(sid => {
 		const sidFilteredInterfaces = interfaces.filter(x => x.func_id[0] === sid);
 		const serviceNm = funcList.find(x => x.ServiceID === sid).ServiceName
@@ -198,6 +211,8 @@ gulp.task("Interfaces", async done => {
 			const func = funcList.find(x => x.FuncID === fid);
 			let fdBase = dBase + "/" + fid;
 			const iprSet = new Set(fidFilteredInterfaces.map(x => x.i_prefix));
+
+			// Service 配下の index.ts を生成する
 			gulp
 				.src(["./src/templates/Interfaces/index.ts.ejs"])
 				.pipe(ejs({
@@ -213,7 +228,7 @@ gulp.task("Interfaces", async done => {
 			iprSet.forEach(ipr => {
 				const iprFilteredInterfaces = fidFilteredInterfaces.filter(i => i.i_prefix === ipr);
 
-				// HogeInterfaceを生成する
+				// HogeInterface を生成する
 				gulp
 					.src(["./src/templates/Interfaces/HogeInterface.ts.ejs"])
 					.pipe(ejs({
@@ -233,7 +248,7 @@ gulp.task("Interfaces", async done => {
 									path: "react-native-google-places-autocomplete"
 								},
 							],
-							name: `${fid}${func.FuncName}${ipr}`,
+							name: `${func.FuncName}${ipr}`,
 							interfaces: iprFilteredInterfaces
 						}
 					}))
@@ -263,10 +278,12 @@ gulp.task("Consts", async done => {
 	const consts = json.CONST;
 	const funcList = json.FuncList;
 	new Set(consts.map(con => con.ServiceID)).forEach(serviceID => {
+		const serviceName = funcList.find(f => f.ServiceID === serviceID).ServiceName
 		gulp
 			.src(["./src/templates/Consts/index.ts.ejs"])
 			.pipe(ejs({
 				req: {
+					service: serviceName,
 					consts: consts.filter(c => c.ServiceID === serviceID)
 						.map(c => (
 						{
@@ -279,7 +296,50 @@ gulp.task("Consts", async done => {
 				...path,
 				extname: ""
 			})))
-			.pipe(gulp.dest(`${distBase}/Consts/${funcList.find(f => f.ServiceID === serviceID).ServiceName}`));
+			.pipe(gulp.dest(`${distBase}/Consts/${serviceName}`));
 	})
+	done();
+});
+
+/************************************************************************************
+ * Create Models files.
+ * @param	task	"Models"
+ * @param	arg1	distBase
+ ************************************************************************************/
+gulp.task("Models", async done => {
+	distBase = options.arg1 || distBase;
+	/**
+	 * @type dataInterface
+	 */
+	const json = await getData();
+	const funcList = json.FuncList;
+	const tables = json.TABLES;
+	const columns = json.T_COLUMNS;
+
+	new Set(tables.map(tab => tab.t_id[0])).forEach(serviceID => {
+		const serviceName = funcList.find(f => f.ServiceID === serviceID).ServiceName
+		tables.filter(tab => tab.t_id[0]===serviceID).forEach(tab => {
+			gulp
+				.src(["./src/templates/Models/Hoge.ts.ejs"])
+				.pipe(ejs({
+					req: {
+						ID: tab.t_id,
+						name: tab.t_name,
+						cols: columns.filter(c => c.t_id === tab.t_id)
+							.map(c => (
+							{
+								...c,
+								c_datatype: ["array", "map"].includes(c.c_datatype) ? c.memo : json.DATA_TYPE.find(d => d.FirestoreType === c.c_datatype).DBType								
+							}))
+					}
+				}))
+				.pipe(rename((path) => ({ 
+					...path,
+					basename: path.basename.replace('Hoge', `${tab.t_name}`),
+					extname: ""
+				})))
+				.pipe(gulp.dest(`${distBase}/Models/${serviceName}/${tab.t_id}`));
+			})
+		})
 	done();
 });
