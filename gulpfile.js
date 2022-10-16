@@ -206,13 +206,27 @@ gulp.task("Interfaces", async done => {
 		const serviceNm = funcList.find(x => x.ServiceID === sid).ServiceName
 		let dBase = sBase + serviceNm;
 		const funcSet = new Set(sidFilteredInterfaces.map(x => x.func_id));
+
+		// Service 配下の index.ts を生成する
+		gulp
+		.src(["./src/templates/Interfaces/index.ts.ejs"])
+		.pipe(ejs({
+			req: {
+				paths: Array.from(funcSet).map(x => `./${x}`)
+			}
+		}))
+		.pipe(rename((path) => ({ 
+			...path,
+			extname: ""
+		})))
+		.pipe(gulp.dest(dBase));
 		funcSet.forEach(fid => {
 			const fidFilteredInterfaces = sidFilteredInterfaces.filter(x => x.func_id === fid);
 			const func = funcList.find(x => x.FuncID === fid);
 			let fdBase = dBase + "/" + fid;
 			const iprSet = new Set(fidFilteredInterfaces.map(x => x.i_prefix));
 
-			// Service 配下の index.ts を生成する
+			// Function 配下の index.ts を生成する
 			gulp
 				.src(["./src/templates/Interfaces/index.ts.ejs"])
 				.pipe(ejs({
