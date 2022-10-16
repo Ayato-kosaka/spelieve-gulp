@@ -1,0 +1,12 @@
+<%#
+req:
+    consts: [
+        {
+            key: string;
+            value: string;
+        }
+    ]
+-%>
+<% req.consts.forEach(cons => { -%>
+<%- include('../../ejs/Index/_exportConst.ejs', {req: cons}) %>
+<% }) -%>

@@ -250,32 +250,36 @@ gulp.task("Interfaces", async done => {
 });
 
 /************************************************************************************
- * Create Funclist files.
- * @param	task	"FuncList"
+ * Create Consts files.
+ * @param	task	"Consts"
  * @param	arg1	distBase
  ************************************************************************************/
-gulp.task("FuncList", async done => {
+gulp.task("Consts", async done => {
 	distBase = options.arg1 || distBase;
 	/**
 	 * @type dataInterface
 	 */
 	const json = await getData();
+	const consts = json.CONST;
 	const funcList = json.FuncList;
-	gulp
-		.src(["./src/templates/FuncList/index.ts.ejs"])
-		.pipe(ejs({
-			req: {
-				consts: funcList.map(func => (
-					{
-						key: func.FuncID,
-						value: JSON.stringify({'name': func.FuncName}, null , "\t")
-					}))
-			}
-		}))
-		.pipe(rename((path) => ({ 
-			...path,
-			extname: ""
-		})))
-		.pipe(gulp.dest(distBase + "/Functions/"));
+	new Set(consts.map(con => con.ServiceID)).forEach(serviceID => {
+		gulp
+			.src(["./src/templates/Consts/index.ts.ejs"])
+			.pipe(ejs({
+				req: {
+					consts: consts.filter(c => c.ServiceID === serviceID)
+						.map(c => (
+						{
+							key: c.key,
+							value: c.value
+						}))
+				}
+			}))
+			.pipe(rename((path) => ({ 
+				...path,
+				extname: ""
+			})))
+			.pipe(gulp.dest(`${distBase}/Consts/${funcList.find(f => f.ServiceID === serviceID).ServiceName}`));
+	})
 	done();
 });

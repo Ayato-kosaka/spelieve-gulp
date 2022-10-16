@@ -3,8 +3,8 @@
   "version": "1.0.23",
   "description": "Auto generate files for spelieve",
   "bin": {
-    "truncateInterfaces": "bin/truncateInterfaces.js",
-    "truncateFuncList": "bin/truncateFuncList.js"
+    "regenInterfaces": "bin/regenInterfaces.js",
+    "regenConsts": "bin/regenConsts.js"
   },
   "repository": {
     "type": "git",
