@@ -250,7 +250,7 @@ gulp.task("Interfaces", async done => {
 							imports: [
 								{
 									contents: ["GeoPoint", "Timestamp", "DocumentReference"],
-									path: "@firebase/firestore-types"
+									path: "@firebase/firestore"
 								},
 								{
 									default: "React",
