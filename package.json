@@ -1,6 +1,6 @@
 {
   "name": "spelieve-gulp",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Auto generate files for spelieve",
   "bin": {
     "regenInterfaces": "bin/regenInterfaces.js",
