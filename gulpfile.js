@@ -249,7 +249,7 @@ gulp.task("Interfaces", async done => {
 						req: {
 							imports: [
 								{
-									contents: ["GeoPoint", "Timestamp", "DocumentReference"],
+									contents: ["GeoPoint", "Timestamp", "DocumentReference", "DocumentSnapshot", "QuerySnapshot", "QueryDocumentSnapshot"],
 									path: "@firebase/firestore"
 								},
 								{
