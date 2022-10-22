@@ -158,21 +158,15 @@ gulp.task("Interfaces", async done => {
 	 */
 	const json = await getData();
 	const funcList = json.FuncList;
-	function colToInterface(c, dtcol){return {
+	function colToInterface(c){return {
 		func_id: c.t_id,
 		i_prefix: '',
 		i_name: c.c_name,
 		i_required: c.c_required,
-		i_type: function (){
-			if(["array", "map"].includes(c.c_datatype)){
-				return c.memo;
-			} else {
-				return json.DATA_TYPE.find(x => x.FirestoreType === c.c_datatype)[dtcol];
-			}
-		}(),
+		i_type: ["Array", "Object"].includes(c.c_datatype) ? c.memo : c.c_datatype,
 	}}
 	
-	// INTERFACE と T_COLUMNS を統合する
+	// INTERFACE, CONTEXT と　T_COLUMNSの差分 を統合する
 	const interfaces = json.INTERFACE
 		.concat(json.FuncList.filter(f => f.FuncType === "Context")
 			.map(f => json.T_COLUMNS
@@ -180,7 +174,7 @@ gulp.task("Interfaces", async done => {
 					&& !json.INTERFACE.filter(i => i.func_id === f.FuncID
 							&& i.i_prefix === '')
 						.map(i => i.i_name).includes(c.c_name))
-				.map(c => ({...colToInterface(c, "CTType"),
+				.map(c => ({...colToInterface(c),
 					func_id: f.FuncID
 				}))
 			).flat()
