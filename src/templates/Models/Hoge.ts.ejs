@@ -6,6 +6,8 @@ req:
       c_name: string;
       c_required: boolean;
       c_datatype: string;
+      c_isPrimitive: boolean;
+      c_init: string;
     ]
 -%>
 import { GeoPoint, Timestamp, DocumentReference } from '@firebase/firestore';
@@ -22,6 +24,14 @@ export class <%- req.name %> {
 <% req.cols?.forEach(col => { -%>
     <%- col.c_name %>: '<%- col.c_name %>',
 <% }) -%>
+  }
+
+  static fromJSON(json: any): <%- req.name %> {
+    const ret = new <%- req.name %>()
+<% req.cols?.forEach(col => { -%>
+    ret.<%- col.c_name %> = (<%- col.c_isPrimitive ? `typeof json.${col.c_name} === '${col.c_datatype}'` : `json.${col.c_name} instanceof ${col.c_datatype}` %>) json.<%- col.c_name %> : <%- col.c_required ? col.c_init : "undifined" %>
+<% }) -%>
+    
   }
 
 <% req.cols?.forEach(col => { -%>

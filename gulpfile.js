@@ -34,7 +34,7 @@ const getData = async () => {
 
 /************************************************************************************
  * Delete arg1 directory.
- * @param	task	"gulp/dataInterface"
+ * @param	task	"deleteDirectory"
  * @param	arg1	directoryPath
  ************************************************************************************/
  gulp.task("deleteDirectory", async done => {
@@ -343,7 +343,9 @@ gulp.task("Models", async done => {
 							.map(c => (
 							{
 								...c,
-								c_datatype: ["array", "map"].includes(c.c_datatype) ? c.memo : json.DATA_TYPE.find(d => d.FirestoreType === c.c_datatype).DBType								
+								c_datatype: ["array", "Object"].includes(c.c_datatype) ? c.memo : c.c_datatype,
+								c_isPrimitive: json.DATA_TYPE.find(d => d.JSType === c.c_datatype).isPrimitive,
+								c_init: json.DATA_TYPE.find(d => d.JSType === c.c_datatype).Init
 							}))
 					}
 				}))

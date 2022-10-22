@@ -2,11 +2,10 @@
  * Export interface of DATA_TYPE object.
  */
 export interface DATA_TYPEInterface {
+    JSType: string;
+    isPrimitive: string;
     FirestoreType: string;
     RuleType: string;
-    DBType: string;
-    CTType: string;
-    FromFirestore: string;
-    CTInit: string;
+    Init: string;
     RuleInit: string;
 } 
