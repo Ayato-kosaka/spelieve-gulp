@@ -343,9 +343,8 @@ gulp.task("Models", async done => {
 							.map(c => (
 							{
 								...c,
-								c_datatype: ["array", "Object"].includes(c.c_datatype) ? c.memo : c.c_datatype,
-								c_isPrimitive: json.DATA_TYPE.find(d => d.JSType === c.c_datatype).isPrimitive,
-								c_init: json.DATA_TYPE.find(d => d.JSType === c.c_datatype).Init
+								c_datatype: ["Array", "Object"].includes(c.c_datatype) ? c.memo : c.c_datatype,
+								data_type: json.DATA_TYPE.find(d => d.JSType === c.c_datatype)
 							}))
 					}
 				}))

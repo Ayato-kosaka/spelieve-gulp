@@ -6,21 +6,19 @@ req:
       c_name: string;
       c_required: boolean;
       c_datatype: string;
-      c_isPrimitive: boolean;
-      c_init: string;
     ]
 -%>
 import { GeoPoint, Timestamp, DocumentReference } from '@firebase/firestore';
-import * as SpelieveInterface from '../../../Interfaces';
+import * as SpelieveInterface from 'Interfaces';
+import * as DateUtils from 'Utils/DateUtils';
 
 /**
  * Export <%- req.ID %><%- req.name %> model class.
  */
 export class <%- req.name %> {
-
   static modelName = '<%- req.name %>';
 
-  static Cols  = {
+  static Cols = {
 <% req.cols?.forEach(col => { -%>
     <%- col.c_name %>: '<%- col.c_name %>',
 <% }) -%>
@@ -29,13 +27,12 @@ export class <%- req.name %> {
   static fromJSON(json: any): <%- req.name %> {
     const ret = new <%- req.name %>()
 <% req.cols?.forEach(col => { -%>
-    ret.<%- col.c_name %> = (<%- col.c_isPrimitive ? `typeof json.${col.c_name} === '${col.c_datatype}'` : `json.${col.c_name} instanceof ${col.c_datatype}` %>) json.<%- col.c_name %> : <%- col.c_required ? col.c_init : "undifined" %>
+    ret.<%- col.c_name %> = <%- col.data_type.isPrimitive ? `typeof json.${col.c_name} === '${col.data_type.JSType}'` : `json.${col.c_name} instanceof ${col.data_type.JSType}` %> ? json.<%- col.c_name %> : <%- col.c_required ? col.data_type.Init : "undefined" %>;
 <% }) -%>
-    
+    return ret;
   }
-
 <% req.cols?.forEach(col => { -%>
-  <%- col.c_name %><%- col.c_required ? '' : '?'  %>: <%- col.c_datatype %>;
 
+  <%- col.c_name %><%- col.c_required ? '' : '?'  %>: <%- col.c_datatype %>;
 <% }) -%>
 }
