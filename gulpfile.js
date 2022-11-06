@@ -252,6 +252,10 @@ gulp.task("Interfaces", async done => {
 									path: "react"
 								},
 								{
+									contents: ["TextInputChangeEventData"],
+									path: "react-native"
+								},
+								{
 									contents: ["GooglePlaceData", "GooglePlaceDetail"],
 									path: "react-native-google-places-autocomplete"
 								},
