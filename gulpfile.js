@@ -243,17 +243,17 @@ gulp.task("Interfaces", async done => {
 						req: {
 							imports: [
 								{
-									contents: ["GeoPoint", "Timestamp", "DocumentReference", "DocumentSnapshot", "QuerySnapshot", "QueryDocumentSnapshot", "CollectionReference"],
-									path: "@firebase/firestore"
-								},
-								{
 									default: "React",
 									contents: ["ReactNode"],
 									path: "react"
 								},
 								{
-									contents: ["TextInputChangeEventData"],
+									default: "ReactNative",
 									path: "react-native"
+								},
+								{
+									contents: ["GeoPoint", "Timestamp", "DocumentReference", "DocumentSnapshot", "QuerySnapshot", "QueryDocumentSnapshot", "CollectionReference"],
+									path: "@firebase/firestore"
 								},
 								{
 									contents: ["GooglePlaceData", "GooglePlaceDetail"],
