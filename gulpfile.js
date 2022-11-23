@@ -249,6 +249,7 @@ gulp.task("Interfaces", async done => {
 								},
 								{
 									default: "ReactNative",
+									contents: [],
 									path: "react-native"
 								},
 								{
