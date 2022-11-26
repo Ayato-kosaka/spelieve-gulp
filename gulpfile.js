@@ -260,6 +260,10 @@ gulp.task("Interfaces", async done => {
 									contents: ["GooglePlaceData", "GooglePlaceDetail"],
 									path: "react-native-google-places-autocomplete"
 								},
+								{
+									contents: ["DateTimePickerEvent"],
+									path: "@react-native-community/datetimepicker"
+								},
 							],
 							name: `${func.FuncName}${ipr}`,
 							interfaces: iprFilteredInterfaces
