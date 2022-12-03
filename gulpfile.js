@@ -253,6 +253,11 @@ gulp.task("Interfaces", async done => {
 									path: "react-native"
 								},
 								{
+									default: "GoogleMaps",
+									contents: [],
+									path: "@googlemaps/google-maps-services-js"
+								},
+								{
 									contents: ["GeoPoint", "Timestamp", "DocumentReference", "DocumentSnapshot", "QuerySnapshot", "QueryDocumentSnapshot", "CollectionReference"],
 									path: "@firebase/firestore"
 								},
