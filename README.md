@@ -5,7 +5,7 @@
 ### ②node_modules を最新化する
 `npm install`
 ### ③.envファイルを配置する
-`https://drive.google.com/file/d/1eFPpXOzEMMa2IKeCz37XLBCTNvypqrCB/view?usp=sharing`
+`[https://drive.google.com/file/d/1eFPpXOzEMMa2IKeCz37XLBCTNvypqrCB/view?usp=sharing](https://docs.google.com/document/d/1_wSoCUwnpskPawzY8AQFXzJeRdND9jfBH5ZrwEajKpA/edit)`
 
 ## 使用方法
 ### コマンド
